@@ -54,5 +54,5 @@ export const INITIAL_REAL_ESTATE: RealEstate[] = [
 export const INITIAL_BONDS: Bond[] = [
     { id: 901, name: 'Gov. Bond', price: 1000, income: 10, type: 'bond' },
     { id: 902, name: 'Walmart', price: 1500, income: 10, type: 'bond' },
-    { id: 903, name: 'Construction', price: 2000, income: 10, type: 'bond' }
+    { id: 903, name: 'Construction Co.', price: 2000, income: 10, type: 'bond' }
 ];
