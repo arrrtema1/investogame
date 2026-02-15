@@ -1,0 +1,90 @@
+.sector-card {
+    background: white;
+    border-left: 6px solid;
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    transition: transform 0.3s;
+}
+
+.sector-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.sector-card.affected {
+    background: #fef2f2;
+}
+
+.sector-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.sector-header h4 {
+    margin: 0;
+    color: #1e293b;
+}
+
+.badge {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: bold;
+}
+
+.badge.crisis {
+    background: #ef4444;
+    color: white;
+}
+
+.badge.growth {
+    background: #10b981;
+    color: white;
+}
+
+.companies-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.company-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 0;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.company-row:last-child {
+    border-bottom: none;
+}
+
+.company-name {
+    flex: 2;
+    font-weight: 500;
+}
+
+.company-price {
+    flex: 1;
+    text-align: right;
+    font-weight: 600;
+    color: #3b82f6;
+}
+
+.company-income {
+    flex: 0.5;
+    text-align: right;
+    font-weight: 600;
+}
+
+.company-income.positive {
+    color: #10b981;
+}
+
+.company-income.negative {
+    color: #ef4444;
+}

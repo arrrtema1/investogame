@@ -1,0 +1,109 @@
+/* src/components/Market/AssetCard/AssetCard.css */
+.asset-card {
+    display: flex;
+    background: white;
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    transition: all 0.3s;
+    border-left: 4px solid;
+    margin-bottom: 10px;
+    min-width: 250px;
+    border-left: solid 10px;
+}
+
+.asset-card:hover {
+    transform: translateX(4px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.asset-card.low {
+    border-left-color: #10b981;
+}
+
+.asset-card.medium {
+    border-left-color: #f59e0b;
+}
+
+.asset-card.high {
+    border-left-color: #ef4444;
+}
+
+.asset-icon {
+    font-size: 2rem;
+    margin-right: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+}
+
+.asset-info {
+    flex: 1;
+}
+
+.asset-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.asset-header h4 {
+    margin: 0;
+    color: #1e293b;
+    font-size: 1.1rem;
+}
+
+.asset-type {
+    font-size: 0.8rem;
+    padding: 3px 8px;
+    background: #e2e8f0;
+    border-radius: 12px;
+    color: #475569;
+}
+
+.asset-details {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.detail-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.detail-item .label {
+    font-size: 0.75rem;
+    color: #64748b;
+    margin-bottom: 4px;
+}
+
+.detail-item .value {
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.value.price {
+    color: #3b82f6;
+}
+
+.value.income.positive {
+    color: #10b981;
+}
+
+.value.income.negative {
+    color: #ef4444;
+}
+
+.value.quantity {
+    color: #8b5cf6;
+}
+
+.asset-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+}

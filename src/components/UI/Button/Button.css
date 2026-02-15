@@ -1,0 +1,235 @@
+/* src/components/UI/Button/Button.css */
+
+.button {
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    position: relative;
+    overflow: hidden;
+}
+
+.button:active {
+    transform: translateY(1px);
+}
+
+.button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* Variants */
+.button.primary {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    color: white;
+    box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
+}
+
+.button.primary:hover:not(:disabled) {
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    box-shadow: 0 6px 10px -1px rgba(37, 99, 235, 0.3);
+    transform: translateY(-2px);
+}
+
+.button.secondary {
+    background: #e2e8f0;
+    color: #1e293b;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.button.secondary:hover:not(:disabled) {
+    background: #cbd5e1;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.button.success {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white;
+    box-shadow: 0 4px 6px -1px rgba(5, 150, 105, 0.2);
+}
+
+.button.success:hover:not(:disabled) {
+    background: linear-gradient(135deg, #059669, #047857);
+    box-shadow: 0 6px 10px -1px rgba(5, 150, 105, 0.3);
+    transform: translateY(-2px);
+}
+
+.button.danger {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: white;
+    box-shadow: 0 4px 6px -1px rgba(220, 38, 38, 0.2);
+}
+
+.button.danger:hover:not(:disabled) {
+    background: linear-gradient(135deg, #dc2626, #b91c1c);
+    box-shadow: 0 6px 10px -1px rgba(220, 38, 38, 0.3);
+    transform: translateY(-2px);
+}
+
+.button.warning {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: white;
+    box-shadow: 0 4px 6px -1px rgba(217, 119, 6, 0.2);
+}
+
+.button.warning:hover:not(:disabled) {
+    background: linear-gradient(135deg, #d97706, #b45309);
+    box-shadow: 0 6px 10px -1px rgba(217, 119, 6, 0.3);
+    transform: translateY(-2px);
+}
+
+/* Sizes */
+.button.small {
+    padding: 8px 16px;
+    font-size: 0.875rem;
+    border-radius: 6px;
+}
+
+.button.medium {
+    padding: 12px 24px;
+    font-size: 1rem;
+}
+
+.button.large {
+    padding: 16px 32px;
+    font-size: 1.125rem;
+    border-radius: 10px;
+}
+
+/* Full Width */
+.button.full-width {
+    width: 100%;
+}
+
+/* Icon Styles */
+.button.has-icon {
+    padding-left: 16px;
+    padding-right: 16px;
+}
+
+.button-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2em;
+}
+
+.button-icon.left {
+    margin-right: 4px;
+}
+
+.button-icon.right {
+    margin-left: 4px;
+}
+
+.button.icon-right {
+    flex-direction: row-reverse;
+}
+
+/* Ripple Effect */
+.button::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 5px;
+    height: 5px;
+    background: rgba(255, 255, 255, 0.5);
+    opacity: 0;
+    border-radius: 100%;
+    transform: scale(1, 1) translate(-50%);
+    transform-origin: 50% 50%;
+}
+
+.button:focus:not(:active)::after {
+    animation: ripple 0.6s ease-out;
+}
+
+@keyframes ripple {
+    0% {
+        transform: scale(0, 0);
+        opacity: 0.5;
+    }
+    20% {
+        transform: scale(25, 25);
+        opacity: 0.3;
+    }
+    100% {
+        opacity: 0;
+        transform: scale(40, 40);
+    }
+}
+
+/* Loading State (можно добавить позже) */
+.button.loading {
+    position: relative;
+    color: transparent !important;
+    pointer-events: none;
+}
+
+.button.loading::before {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border: 2px solid white;
+    border-radius: 50%;
+    border-top-color: transparent;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Disabled State Enhancement */
+.button:disabled {
+    background: #cbd5e1;
+    background-image: none;
+    color: #64748b;
+    box-shadow: none;
+    transform: none;
+}
+
+/* Hover Effects for Different Variants when not disabled */
+.button.primary:not(:disabled):hover,
+.button.success:not(:disabled):hover,
+.button.danger:not(:disabled):hover,
+.button.warning:not(:disabled):hover {
+    filter: brightness(1.1);
+}
+
+/* Focus State */
+.button:focus-visible {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+}
+
+/* Group of Buttons */
+.button-group {
+    display: flex;
+    gap: 10px;
+}
+
+.button-group .button:not(:first-child):not(:last-child) {
+    border-radius: 0;
+}
+
+.button-group .button:first-child {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.button-group .button:last-child {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}

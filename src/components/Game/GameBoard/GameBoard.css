@@ -1,0 +1,487 @@
+/* src/components/Game/GameBoard/GameBoard.css */
+
+.game-board {
+    max-width: 1600px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 24px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    min-height: 800px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Header Styles */
+.game-header {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    color: white;
+    padding: 20px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 4px solid #0f3460;
+}
+
+.header-left h1 {
+    margin: 0;
+    font-size: 2rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: inline-block;
+}
+
+.game-tagline {
+    font-size: 0.9rem;
+    color: #a0a0a0;
+    margin-top: 4px;
+}
+
+.header-right {
+    display: flex;
+    gap: 20px;
+}
+
+.game-info {
+    display: flex;
+    gap: 15px;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 12px 20px;
+    border-radius: 40px;
+    backdrop-filter: blur(10px);
+}
+
+.year, .phase, .market-type {
+    padding: 0 10px;
+    font-weight: 500;
+}
+
+.year {
+    color: #ffd700;
+    border-right: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.phase {
+    color: #4ade80;
+}
+
+.market-type {
+    color: #f472b6;
+    border-left: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Main Content Layout */
+.game-content {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    flex: 1;
+    background: #f8fafc;
+}
+
+/* Left Panel */
+.left-panel {
+    background: white;
+    border-right: 2px solid #e2e8f0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.player-info {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px;
+    border-radius: 16px;
+    text-align: center;
+}
+
+.player-info h3 {
+    margin: 0 0 15px 0;
+    font-size: 1.2rem;
+    opacity: 0.9;
+}
+
+.balance-large {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.player-stats {
+    display: flex;
+    justify-content: space-around;
+    font-size: 0.9rem;
+    opacity: 0.9;
+}
+
+.game-controls {
+    background: #f8fafc;
+    padding: 20px;
+    border-radius: 16px;
+    border: 2px solid #e2e8f0;
+}
+
+.game-controls h3 {
+    margin: 0 0 15px 0;
+    color: #1e293b;
+}
+
+.game-controls .button {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+/* Main Panel */
+.main-panel {
+    padding: 20px;
+    overflow-y: auto;
+}
+
+/* Tabs */
+.market-tabs {
+    display: flex;
+    gap: 5px;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #e2e8f0;
+    padding-bottom: 10px;
+}
+
+.tab {
+    padding: 10px 20px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #64748b;
+    transition: all 0.3s;
+    border-radius: 8px 8px 0 0;
+}
+
+.tab:hover {
+    color: #1e293b;
+    background: #f1f5f9;
+}
+
+.tab.active {
+    color: #3b82f6;
+    border-bottom: 3px solid #3b82f6;
+    background: #eff6ff;
+}
+
+/* Sectors Grid */
+.sectors-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    margin-top: 15px;
+}
+
+.sector-card {
+    background: white;
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    border-left: 6px solid;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.sector-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+}
+
+.sector-card.affected {
+    background: #fef2f2;
+    border-color: #ef4444 !important;
+}
+
+.sector-card.crisis {
+    background: #fef2f2;
+}
+
+.sector-card.growth {
+    background: #f0fdf4;
+}
+
+.sector-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.sector-header h4 {
+    margin: 0;
+    font-size: 1.2rem;
+    color: #1e293b;
+}
+
+.badge {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.crisis-badge {
+    background: #ef4444;
+    color: white;
+}
+
+.growth-badge {
+    background: #10b981;
+    color: white;
+}
+
+/* Companies */
+.companies {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.company-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px;
+    background: #f8fafc;
+    border-radius: 6px;
+    font-size: 0.9rem;
+}
+
+.company-item.bankrupt {
+    background: #fee2e2;
+    opacity: 0.7;
+    text-decoration: line-through;
+}
+
+.company-name {
+    font-weight: 500;
+    color: #1e293b;
+}
+
+.company-details {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.price {
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.income {
+    font-weight: 600;
+}
+
+.income.positive {
+    color: #10b981;
+}
+
+.income.negative {
+    color: #ef4444;
+}
+
+.bankrupt-label {
+    font-size: 1rem;
+}
+
+/* Assets Grid */
+.assets-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.asset-card {
+    background: white;
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    border: 1px solid #e2e8f0;
+    transition: transform 0.3s;
+}
+
+.asset-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+}
+
+.asset-card h4 {
+    margin: 0 0 10px 0;
+    color: #1e293b;
+}
+
+.asset-details {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.asset-price {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #3b82f6;
+}
+
+.asset-income {
+    background: #10b981;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-weight: 600;
+}
+
+/* Portfolio View */
+.portfolio-view {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid #e2e8f0;
+}
+
+.portfolio-summary {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+    padding: 15px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 10px;
+    color: white;
+}
+
+.summary-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.summary-item span:first-child {
+    font-size: 0.9rem;
+    opacity: 0.9;
+}
+
+.summary-item span:last-child {
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.portfolio-section {
+    margin-bottom: 20px;
+}
+
+.portfolio-section h4 {
+    margin: 0 0 10px 0;
+    color: #1e293b;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.portfolio-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.portfolio-item:last-child {
+    border-bottom: none;
+}
+
+.empty-portfolio {
+    text-align: center;
+    padding: 40px;
+    color: #94a3b8;
+    font-style: italic;
+}
+
+/* Crisis Modal */
+.crisis-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    backdrop-filter: blur(5px);
+}
+
+.crisis-content {
+    background: white;
+    padding: 40px;
+    border-radius: 20px;
+    text-align: center;
+    max-width: 400px;
+    animation: slideIn 0.3s ease-out;
+}
+
+.crisis-content h2 {
+    margin: 0 0 20px 0;
+    color: #ef4444;
+    font-size: 1.8rem;
+}
+
+.crisis-content p {
+    margin: 0 0 30px 0;
+    color: #64748b;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .game-content {
+        grid-template-columns: 1fr;
+    }
+
+    .left-panel {
+        border-right: none;
+        border-bottom: 2px solid #e2e8f0;
+    }
+
+    .sectors-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .game-header {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+
+    .game-info {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .year, .phase, .market-type {
+        border: none;
+    }
+}

@@ -1,0 +1,41 @@
+.market-panel {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.market-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.market-header h3 {
+    margin: 0;
+    color: #1e293b;
+}
+
+.market-badge {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+.market-badge.crisis {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.market-badge.growth {
+    background: #d1fae5;
+    color: #059669;
+}
+
+.sectors-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 15px;
+}
