@@ -8,7 +8,7 @@ export const INITIAL_SECTORS: Sector[] = [
         companies: [
             { id: 101, name: 'Toyota', price: 3000, income: 10, size: 'large', sectorId: 2, type: 'stock' },
             { id: 102, name: 'Ford', price: 2200, income: 10, size: 'large', sectorId: 2, type: 'stock' },
-            { id: 103, name: 'Tesla', price: 1500, income: 9, size: 'medium', sectorId: 2, type: 'stock' }
+            { id: 103, name: 'Tesla', price: 1500, income: 10, size: 'medium', sectorId: 2, type: 'stock' }
         ]
     },
     {
@@ -17,8 +17,8 @@ export const INITIAL_SECTORS: Sector[] = [
         color: 'orange',
         companies: [
             { id: 201, name: 'Google', price: 2500, income: 15, size: 'large', sectorId: 1, type: 'stock' },
-            { id: 202, name: 'OpenAI', price: 1500, income: 8, size: 'medium', sectorId: 1, type: 'stock' },
-            { id: 203, name: 'JetBrains', price: 1000, income: 10, size: 'small', sectorId: 1, type: 'stock' }
+            { id: 202, name: 'OpenAI', price: 1500, income: 20, size: 'medium', sectorId: 1, type: 'stock' },
+            { id: 203, name: 'JetBrains', price: 1000, income: 25, size: 'small', sectorId: 1, type: 'stock' }
         ]
     },
     {
@@ -26,8 +26,8 @@ export const INITIAL_SECTORS: Sector[] = [
         name: 'Oil companies',
         color: 'black',
         companies: [
-            { id: 301, name: 'FlowerCo', price: 150, income: 5, size: 'medium', sectorId: 3, type: 'stock' },
-            { id: 302, name: 'GreenHouse', price: 220, income: 6, size: 'small', sectorId: 3, type: 'stock' }
+            { id: 301, name: 'ExxonMobil', price: 3500, income: 10, size: 'large', sectorId: 3, type: 'stock' },
+            { id: 302, name: 'EOG Resources', price: 3000, income: 10, size: 'large', sectorId: 3, type: 'stock' }
         ]
     },
     {
@@ -35,8 +35,8 @@ export const INITIAL_SECTORS: Sector[] = [
         name: 'Furniture retailers',
         color: 'violet',
         companies: [
-            { id: 401, name: 'IKEA', price: 500, income: 8, size: 'large', sectorId: 4, type: 'stock' },
-            { id: 402, name: 'OBI', price: 280, income: 6, size: 'medium', sectorId: 4, type: 'stock' }
+            { id: 401, name: 'IKEA', price: 750, income: 5, size: 'large', sectorId: 4, type: 'stock' },
+            { id: 402, name: 'OBI', price: 500, income: 7.5, size: 'medium', sectorId: 4, type: 'stock' }
         ]
     }
 ];
