@@ -1,4 +1,3 @@
-// src/components/Game/GameBoard/GameBoard.tsx
 import React, { useState } from 'react';
 import { useGame } from '../../../contexts/GameContext';
 import { Button } from '../../UI/Button';
@@ -23,7 +22,7 @@ export const GameBoard: React.FC = () => {
 
     const getPhaseDisplay = () => {
         switch(gameState.phase) {
-            case 'coin_flip': return '🎲 Бросок монетки';
+            case 'coin_flip': return '🎲 Coin flip';
             case 'sector_select': return '🎯 Выбор сектора';
             case 'crisis_dice': return '⚡ Кризис - Бросок кубиков';
             case 'trading': return '💹 Торговая сессия';
@@ -36,8 +35,8 @@ export const GameBoard: React.FC = () => {
     const getMarketTypeDisplay = () => {
         if (!gameState.marketType) return null;
         return gameState.marketType === 'crisis'
-            ? '🔴 Кризис в одном секторе'
-            : '🟢 Рост во всех секторах';
+            ? '🔴 Crisis in one sector'
+            : '🟢 Grow in one sector';
     };
 
     const renderSectorCard = (sector: Sector) => {
