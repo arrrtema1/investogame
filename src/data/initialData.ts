@@ -35,7 +35,7 @@ export const INITIAL_SECTORS: Sector[] = [
         name: 'Furniture retailers',
         color: 'violet',
         companies: [
-            { id: 401, name: 'IKEA', price: 750, income: 5, size: 'large', sectorId: 4, type: 'stock' },
+            { id: 401, name: 'HomeDepot', price: 750, income: 5, size: 'large', sectorId: 4, type: 'stock' },
             { id: 402, name: 'OBI', price: 500, income: 7.5, size: 'medium', sectorId: 4, type: 'stock' }
         ]
     }
