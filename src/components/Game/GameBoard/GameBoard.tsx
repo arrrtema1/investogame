@@ -23,8 +23,7 @@ export const GameBoard: React.FC = () => {
     const getPhaseDisplay = () => {
         switch(gameState.phase) {
             case 'coin_flip': return '🎲 Coin flip';
-            case 'sector_select': return '🎯 Sl
-Selecting sector';
+            case 'sector_select': return '🎯 Selecting sector';
             case 'crisis_dice': return '⚡ Choosing what company has crisis';
             case 'trading': return '💹 Trading';
             case 'income': return '💰 Generating income';
