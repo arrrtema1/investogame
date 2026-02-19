@@ -210,20 +210,12 @@ Selecting sector';
                     <div className="game-controls">
                         <h3>🎮 Controls</h3>
                         <Button
-                            onClick={handleCoinFlip}
-                            disabled={gameState.phase !== 'coin_flip'}
-                            variant="primary"
-                            size="large"
-                        >
-                            Flip Coin
-                        </Button>
-                        <Button
                             onClick={nextYear}
                             disabled={gameState.phase !== 'year_end'}
                             variant="success"
                             size="large"
                         >
-                            Next Year →
+                            Ready to next year
                         </Button>
                         <Button
                             onClick={resetGame}
