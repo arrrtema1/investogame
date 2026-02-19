@@ -23,11 +23,12 @@ export const GameBoard: React.FC = () => {
     const getPhaseDisplay = () => {
         switch(gameState.phase) {
             case 'coin_flip': return '🎲 Coin flip';
-            case 'sector_select': return '🎯 Выбор сектора';
-            case 'crisis_dice': return '⚡ Кризис - Бросок кубиков';
-            case 'trading': return '💹 Торговая сессия';
-            case 'income': return '💰 Получение дохода';
-            case 'year_end': return '📊 Конец года';
+            case 'sector_select': return '🎯 Sl
+Selecting sector';
+            case 'crisis_dice': return '⚡ Choosing what company has crisis';
+            case 'trading': return '💹 Trading';
+            case 'income': return '💰 Generating income';
+            case 'year_end': return '📊 End of the year';
             default: return gameState.phase;
         }
     };
