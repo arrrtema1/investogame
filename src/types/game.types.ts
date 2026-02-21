@@ -55,6 +55,18 @@ export interface RealEstateWithQuantity extends RealEstate {
     quantity: number;
 }
 
+export interface Metal {
+    id: number;
+    name: string;
+    price: number;
+    grow: number;
+    type: 'metal';
+}
+
+export interface MetalWithQuantity extends Metal {
+    quantity: number;
+}
+
 export type Asset = Company | Bond | RealEstate;
 export type AssetWithQuantity = CompanyWithQuantity | BondWithQuantity | RealEstateWithQuantity;
 

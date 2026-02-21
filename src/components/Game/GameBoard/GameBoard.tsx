@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useGame } from '../../../contexts/GameContext';
 import { Button } from '../../UI/Button';
+import { Clock } from '../../UI/Clock'
 import { AssetCard } from '../../Market/AssetCard';
 import { Sector, Company, Bond, RealEstate } from '../../../types/game.types';
 import './GameBoard.css';
@@ -181,6 +182,7 @@ export const GameBoard: React.FC = () => {
                     <h1>InvestoGame</h1>
                 </div>
                 <div className="header-right">
+                    <Clock format="time" />
                     <div className="game-info">
                         <span className="year">Year {gameState.currentYear}/10</span>
                         <span className="phase">{getPhaseDisplay()}</span>
