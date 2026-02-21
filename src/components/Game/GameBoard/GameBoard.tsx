@@ -24,11 +24,11 @@ export const GameBoard: React.FC = () => {
     const getPhaseDisplay = () => {
         switch(gameState.phase) {
             case 'coin_flip': return '🎲 Coin flip';
-            case 'sector_select': return '🎯 Выбор сектора';
-            case 'crisis_dice': return '⚡ Кризис - Бросок кубиков';
-            case 'trading': return '💹 Торговая сессия';
-            case 'income': return '💰 Получение дохода';
-            case 'year_end': return '📊 Конец года';
+            case 'sector_select': return '🎯 Selecting sector';
+            case 'crisis_dice': return '⚡ Choosing what company has crisis';
+            case 'trading': return '💹 Trading';
+            case 'income': return '💰 Generating income';
+            case 'year_end': return '📊 End of the year';
             default: return gameState.phase;
         }
     };
@@ -211,20 +211,12 @@ export const GameBoard: React.FC = () => {
                     <div className="game-controls">
                         <h3>🎮 Controls</h3>
                         <Button
-                            onClick={handleCoinFlip}
-                            disabled={gameState.phase !== 'coin_flip'}
-                            variant="primary"
-                            size="large"
-                        >
-                            Flip Coin
-                        </Button>
-                        <Button
                             onClick={nextYear}
                             disabled={gameState.phase !== 'year_end'}
                             variant="success"
                             size="large"
                         >
-                            Next Year →
+                            Ready to next year
                         </Button>
                         <Button
                             onClick={resetGame}
