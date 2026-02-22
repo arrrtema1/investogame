@@ -57,19 +57,34 @@ export const GameBoard: React.FC = () => {
                 <div className="companies">
                     {sector.companies.map(company => (
                         <div key={company.id} className={`company-item ${company.isBankrupt ? 'bankrupt' : ''}`}>
-                            <div className="company-name">
-                                {company.name}
-                                {company.size === 'large' && ' 🏢'}
-                                {company.size === 'medium' && ' 🏬'}
-                                {company.size === 'small' && ' 🏪'}
-                            </div>
-                            <div className="company-details">
-                                <span className="price">${company.price}</span>
-                                <span className={`income ${company.income > 0 ? 'positive' : 'negative'}`}>
+                            <div className="company-info">
+                                <div className="company-name">
+                                    {company.name}
+                                    {company.size === 'large' && ' 🏢'}
+                                    {company.size === 'medium' && ' 🏬'}
+                                    {company.size === 'small' && ' 🏪'}
+                                </div>
+                                <div className="company-details">
+                                    <span className="price">${company.price}</span>
+                                    <span className={`income ${company.income > 0 ? 'positive' : 'negative'}`}>
                                     {company.income}%
                                 </span>
-                                {company.isBankrupt && <span className="bankrupt-label">💀</span>}
+                                    {company.isBankrupt && <span className="bankrupt-label">💀</span>}
+                                </div>
                             </div>
+
+                            {gameState.phase === 'trading' && !company.isBankrupt && (
+                                <div className="company-actions">
+                                    <Button
+                                        size="small"
+                                        variant="success"
+                                        onClick={() => handleBuyAsset(company)}
+                                        disabled={currentPlayer.balance < company.price}
+                                    >
+                                        Buy
+                                    </Button>
+                                </div>
+                            )}
                         </div>
                     ))}
                 </div>
@@ -237,10 +252,10 @@ export const GameBoard: React.FC = () => {
                         <div className="player-stats">
                             <div>Income: ${currentPlayer.totalIncome}</div>
                             <div>Assets: {
-                                currentPlayer.portfolio.stocks.length +
-                                currentPlayer.portfolio.bonds.length +
-                                currentPlayer.portfolio.realEstate.length +
-                                currentPlayer.portfolio.metals.length
+                                currentPlayer.portfolio.stocks.reduce((sum, item) => sum + item.quantity, 0) +
+                                currentPlayer.portfolio.bonds.reduce((sum, item) => sum + item.quantity, 0) +
+                                currentPlayer.portfolio.realEstate.reduce((sum, item) => sum + item.quantity, 0) +
+                                currentPlayer.portfolio.metals.reduce((sum, item) => sum + item.quantity, 0)
                             }</div>
                         </div>
                     </div>
