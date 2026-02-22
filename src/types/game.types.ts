@@ -2,7 +2,7 @@
 
 export type CompanySize = 'large' | 'medium' | 'small';
 export type GamePhase = 'coin_flip' | 'sector_select' | 'crisis_dice' | 'trading' | 'income' | 'year_end';
-export type AssetType = 'stock' | 'bond' | 'realestate';
+export type AssetType = 'stock' | 'bond' | 'realestate' | 'metal';
 
 export interface Company {
     id: number;
@@ -59,7 +59,7 @@ export interface Metal {
     id: number;
     name: string;
     price: number;
-    grow: number;
+    income: number;
     type: 'metal';
 }
 
@@ -67,13 +67,14 @@ export interface MetalWithQuantity extends Metal {
     quantity: number;
 }
 
-export type Asset = Company | Bond | RealEstate;
+export type Asset = Company | Bond | RealEstate | Metal;
 export type AssetWithQuantity = CompanyWithQuantity | BondWithQuantity | RealEstateWithQuantity;
 
 export interface Portfolio {
     stocks: CompanyWithQuantity[];
     bonds: BondWithQuantity[];
     realEstate: RealEstateWithQuantity[];
+    metals: MetalWithQuantity[];
 }
 
 export interface Player {
@@ -93,6 +94,7 @@ export interface GameState {
     sectors: Sector[];
     availableBonds: Bond[];
     availableRealEstate: RealEstate[];
+    availableMetals: Metal[];
     diceResults?: {
         coinFlip: 'crisis' | 'growth';
         selectedSector: Sector;

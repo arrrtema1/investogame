@@ -28,8 +28,7 @@ export const Clock: React.FC<ClockProps> = ({
 
     return (
         <div className={`clock ${className}`}>
-            <span className="clock-icon">🕐</span>
-            <span className="clock-time">{formattedTime}</span>
+            <span className="clock-time"><span className={'clock-icon'}>🕐</span>{formattedTime}</span>
         </div>
     );
 };

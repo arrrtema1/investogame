@@ -4,11 +4,12 @@ import { Button } from '../../UI/Button';
 import { Clock } from '../../UI/Clock'
 import { AssetCard } from '../../Market/AssetCard';
 import { Sector, Company, Bond, RealEstate } from '../../../types/game.types';
+import { GAME_CONSTANTS } from '../../../data/constants';
 import './GameBoard.css';
 
 export const GameBoard: React.FC = () => {
     const { gameState, setGamePhase, nextYear, resetGame, buyAsset } = useGame();
-    const [selectedTab, setSelectedTab] = useState<'market' | 'bonds' | 'realestate' | 'portfolio'>('market');
+    const [selectedTab, setSelectedTab] = useState<'market' | 'bonds' | 'realestate' | 'portfolio' | 'metals'>('market');
 
     const currentPlayer = gameState.players[0];
 
@@ -17,8 +18,10 @@ export const GameBoard: React.FC = () => {
     };
 
     const handleBuyAsset = (asset: any) => {
-        buyAsset(asset, 1);
-        console.log('Buying:', asset);
+        if (gameState.phase === 'trading') {
+            buyAsset(asset, 1);
+            console.log(`Bought: ${asset.name} for $${asset.price}`);
+        }
     };
 
     const getPhaseDisplay = () => {
@@ -84,6 +87,7 @@ export const GameBoard: React.FC = () => {
                         asset={bond}
                         onBuy={handleBuyAsset}
                         showActions={gameState.phase === 'trading'}
+                        playerBalance={currentPlayer.balance}
                     />
                 ))}
             </div>
@@ -100,6 +104,24 @@ export const GameBoard: React.FC = () => {
                         asset={property}
                         onBuy={handleBuyAsset}
                         showActions={gameState.phase === 'trading'}
+                        playerBalance={currentPlayer.balance}
+                    />
+                ))}
+            </div>
+        );
+    };
+
+    const renderMetals = () => {
+        const metals = gameState.availableMetals || [];
+        return (
+            <div className="assets-grid">
+                {metals.map(metal => (
+                    <AssetCard
+                        key={metal.id}
+                        asset={metal}
+                        onBuy={handleBuyAsset}
+                        showActions={gameState.phase === 'trading'}
+                        playerBalance={currentPlayer.balance}
                     />
                 ))}
             </div>
@@ -122,14 +144,15 @@ export const GameBoard: React.FC = () => {
                             ${currentPlayer.balance +
                             portfolio.stocks.reduce((sum, s) => sum + (s.price * s.quantity), 0) +
                             portfolio.bonds.reduce((sum, b) => sum + (b.price * b.quantity), 0) +
-                            portfolio.realEstate.reduce((sum, r) => sum + (r.price * r.quantity), 0)}
+                            portfolio.realEstate.reduce((sum, r) => sum + (r.price * r.quantity), 0) +
+                            portfolio.metals.reduce((sum, r) => sum + (r.price * r.quantity), 0)}
                         </span>
                     </div>
                 </div>
 
                 {portfolio.stocks.length > 0 && (
                     <div className="portfolio-section">
-                        <h4>Stocks 📈</h4>
+                        <h4>📈 Stocks</h4>
                         {portfolio.stocks.map(stock => (
                             <div key={stock.id} className="portfolio-item">
                                 <span>{stock.name} x{stock.quantity}</span>
@@ -141,7 +164,7 @@ export const GameBoard: React.FC = () => {
 
                 {portfolio.bonds.length > 0 && (
                     <div className="portfolio-section">
-                        <h4>Bonds 📊</h4>
+                        <h4>📊 Bonds</h4>
                         {portfolio.bonds.map(bond => (
                             <div key={bond.id} className="portfolio-item">
                                 <span>{bond.name} x{bond.quantity}</span>
@@ -153,7 +176,7 @@ export const GameBoard: React.FC = () => {
 
                 {portfolio.realEstate.length > 0 && (
                     <div className="portfolio-section">
-                        <h4>Real Estate 🏠</h4>
+                        <h4>🏠 Real Estate</h4>
                         {portfolio.realEstate.map(property => (
                             <div key={property.id} className="portfolio-item">
                                 <span>{property.name} x{property.quantity}</span>
@@ -163,13 +186,26 @@ export const GameBoard: React.FC = () => {
                     </div>
                 )}
 
+                {portfolio.metals.length > 0 && (
+                    <div className="portfolio-section">
+                        <h4>🪙 Metals</h4>
+                        {portfolio.metals.map(property => (
+                            <div key={property.id} className="portfolio-item">
+                                <span>{property.name} x{property.quantity}</span>
+                                <span>${property.price * property.quantity}</span>
+                            </div>
+                        ))}
+                    </div>
+                )}
+
                 {portfolio.stocks.length === 0 &&
-                    portfolio.bonds.length === 0 &&
-                    portfolio.realEstate.length === 0 && (
-                        <div className="empty-portfolio">
-                            No assets yet. Start trading!
-                        </div>
-                    )}
+                portfolio.bonds.length === 0 &&
+                portfolio.realEstate.length === 0 &&
+                portfolio.metals.length === 0 && (
+                    <div className="empty-portfolio">
+                        No assets yet. Start trading!
+                    </div>
+                )}
             </div>
         );
     };
@@ -184,7 +220,7 @@ export const GameBoard: React.FC = () => {
                 <div className="header-right">
                     <Clock format="time" />
                     <div className="game-info">
-                        <span className="year">Year {gameState.currentYear}/10</span>
+                        <span className="year">Year {gameState.currentYear}/{GAME_CONSTANTS.MAX_YEARS}</span>
                         <span className="phase">{getPhaseDisplay()}</span>
                         {getMarketTypeDisplay() && (
                             <span className="market-type">{getMarketTypeDisplay()}</span>
@@ -196,14 +232,15 @@ export const GameBoard: React.FC = () => {
             <div className="game-content">
                 <div className="left-panel">
                     <div className="player-info">
-                        <h3>👤 Player</h3>
+                        <h3>👤 {GAME_CONSTANTS.PLAYER_NAME}</h3>
                         <div className="balance-large">${currentPlayer.balance}</div>
                         <div className="player-stats">
                             <div>Income: ${currentPlayer.totalIncome}</div>
                             <div>Assets: {
                                 currentPlayer.portfolio.stocks.length +
                                 currentPlayer.portfolio.bonds.length +
-                                currentPlayer.portfolio.realEstate.length
+                                currentPlayer.portfolio.realEstate.length +
+                                currentPlayer.portfolio.metals.length
                             }</div>
                         </div>
                     </div>
@@ -216,14 +253,7 @@ export const GameBoard: React.FC = () => {
                             variant="success"
                             size="large"
                         >
-                            Ready to next year
-                        </Button>
-                        <Button
-                            onClick={resetGame}
-                            variant="secondary"
-                            size="medium"
-                        >
-                            Reset Game
+                            Ready 📅
                         </Button>
                     </div>
                 </div>
@@ -247,6 +277,12 @@ export const GameBoard: React.FC = () => {
                             onClick={() => setSelectedTab('realestate')}
                         >
                             🏠 Real Estate
+                        </button>
+                        <button
+                            className={`tab ${selectedTab === 'metals' ? 'active' : ''}`}
+                            onClick={() => setSelectedTab('metals')}
+                        >
+                            🪙 Metals
                         </button>
                         <button
                             className={`tab ${selectedTab === 'portfolio' ? 'active' : ''}`}
@@ -277,6 +313,13 @@ export const GameBoard: React.FC = () => {
                             <div className="realestate-view">
                                 <h3>Real Estate</h3>
                                 {renderRealEstate()}
+                            </div>
+                        )}
+
+                        {selectedTab === 'metals' && (
+                            <div className="metals-view">
+                                <h3>Metals</h3>
+                                {renderMetals()}
                             </div>
                         )}
 

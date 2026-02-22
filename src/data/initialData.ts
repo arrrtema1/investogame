@@ -35,7 +35,7 @@ export const INITIAL_SECTORS: Sector[] = [
         name: 'Furniture retailers',
         color: 'violet',
         companies: [
-            { id: 401, name: 'IKEA', price: 750, income: 5, size: 'medium', sectorId: 4, type: 'stock' },
+            { id: 401, name: 'HomeDepot', price: 750, income: 5, size: 'medium', sectorId: 4, type: 'stock' },
             { id: 402, name: 'OBI', price: 500, income: 7.5, size: 'small', sectorId: 4, type: 'stock' }
         ]
     }
@@ -58,8 +58,8 @@ export const INITIAL_BONDS: Bond[] = [
 ];
 
 export const INITIAL_METALS: Metal[] = [
-    { id: 901, name: 'Silver', price: 1000, grow: 10, type: 'metal' },
-    { id: 902, name: 'Palladium', price: 1500, grow: 10, type: 'metal' },
-    { id: 903, name: 'Platinum', price: 2000, grow: 10, type: 'metal' },
-    { id: 904, name: 'Gold', price: 5000, grow: 5, type: 'metal' }
+    { id: 901, name: 'Silver', price: 500, income: 10, type: 'metal' },
+    { id: 902, name: 'Palladium', price: 2000, income: 10, type: 'metal' },
+    { id: 903, name: 'Platinum', price: 2500, income: 10, type: 'metal' },
+    { id: 904, name: 'Gold', price: 6000, income: 5, type: 'metal' }
 ];

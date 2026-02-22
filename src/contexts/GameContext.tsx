@@ -11,9 +11,10 @@ import {
     CompanyWithQuantity,
     BondWithQuantity,
     RealEstateWithQuantity,
-    AssetWithQuantity
+    AssetWithQuantity, Metal, MetalWithQuantity
 } from '../types/game.types';
-import { INITIAL_SECTORS, INITIAL_BONDS, INITIAL_REAL_ESTATE } from '../data/initialData';
+import { INITIAL_SECTORS, INITIAL_BONDS, INITIAL_REAL_ESTATE, INITIAL_METALS } from '../data/initialData';
+import { GAME_CONSTANTS } from '../data/constants';
 
 interface GameContextType {
     gameState: GameState;
@@ -31,17 +32,18 @@ interface GameContextType {
 
 const initialState: GameState = {
     currentYear: 1,
-    phase: 'coin_flip',
+    phase: 'trading',
     marketType: null,
     selectedSector: null,
     players: [
         {
             id: 'player1',
-            balance: 2000,
+            balance: GAME_CONSTANTS.STARTING_BALANCE,
             portfolio: {
                 stocks: [],
                 bonds: [],
-                realEstate: []
+                realEstate: [],
+                metals: []
             },
             totalIncome: 0,
             isReady: false
@@ -56,7 +58,8 @@ const initialState: GameState = {
         }))
     })),
     availableBonds: INITIAL_BONDS,
-    availableRealEstate: INITIAL_REAL_ESTATE
+    availableRealEstate: INITIAL_REAL_ESTATE,
+    availableMetals: INITIAL_METALS
 };
 
 const GameContext = createContext<GameContextType | undefined>(undefined);
@@ -204,23 +207,81 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
                 let updatedPortfolio = { ...player.portfolio };
 
                 if (asset.type === 'bond') {
-                    const bondWithQuantity: BondWithQuantity = {
-                        ...asset as Bond,
-                        quantity
-                    };
-                    updatedPortfolio.bonds = [...player.portfolio.bonds, bondWithQuantity];
-                } else if (asset.type === 'realestate') {
-                    const realEstateWithQuantity: RealEstateWithQuantity = {
-                        ...asset as RealEstate,
-                        quantity
-                    };
-                    updatedPortfolio.realEstate = [...player.portfolio.realEstate, realEstateWithQuantity];
-                } else {
-                    const companyWithQuantity: CompanyWithQuantity = {
-                        ...asset as Company,
-                        quantity
-                    };
-                    updatedPortfolio.stocks = [...player.portfolio.stocks, companyWithQuantity];
+                    // Проверить, есть ли уже такая облигация
+                    const existingBondIndex = player.portfolio.bonds.findIndex(b => b.id === asset.id);
+
+                    if (existingBondIndex >= 0) {
+                        // Если есть - увеличить количество
+                        const updatedBonds = [...player.portfolio.bonds];
+                        updatedBonds[existingBondIndex] = {
+                            ...updatedBonds[existingBondIndex],
+                            quantity: updatedBonds[existingBondIndex].quantity + quantity
+                        };
+                        updatedPortfolio.bonds = updatedBonds;
+                    } else {
+                        // Если нет - добавить новую
+                        const bondWithQuantity: BondWithQuantity = {
+                            ...asset as Bond,
+                            quantity
+                        };
+                        updatedPortfolio.bonds = [...player.portfolio.bonds, bondWithQuantity];
+                    }
+                }
+                else if (asset.type === 'realestate') {
+                    // Аналогично для недвижимости
+                    const existingREIndex = player.portfolio.realEstate.findIndex(r => r.id === asset.id);
+
+                    if (existingREIndex >= 0) {
+                        const updatedRE = [...player.portfolio.realEstate];
+                        updatedRE[existingREIndex] = {
+                            ...updatedRE[existingREIndex],
+                            quantity: updatedRE[existingREIndex].quantity + quantity
+                        };
+                        updatedPortfolio.realEstate = updatedRE;
+                    } else {
+                        const realEstateWithQuantity: RealEstateWithQuantity = {
+                            ...asset as RealEstate,
+                            quantity
+                        };
+                        updatedPortfolio.realEstate = [...player.portfolio.realEstate, realEstateWithQuantity];
+                    }
+                }
+                else if (asset.type === 'metal') {
+                    const existingMetalsIndex = player.portfolio.metals.findIndex(r => r.id === asset.id);
+
+                    if (existingMetalsIndex >= 0) {
+                        const updatedMetals = [...player.portfolio.metals];
+                        updatedMetals[existingMetalsIndex] = {
+                            ...updatedMetals[existingMetalsIndex],
+                            quantity: updatedMetals[existingMetalsIndex].quantity + quantity
+                        };
+                        updatedPortfolio.metals = updatedMetals;
+                    } else {
+                        const metalWithQuantity: MetalWithQuantity = {
+                            ...asset as Metal,
+                            quantity
+                        };
+                        updatedPortfolio.metals = [...player.portfolio.metals, metalWithQuantity];
+                    }
+                }
+                else {
+                    // Для акций
+                    const existingStockIndex = player.portfolio.stocks.findIndex(s => s.id === asset.id);
+
+                    if (existingStockIndex >= 0) {
+                        const updatedStocks = [...player.portfolio.stocks];
+                        updatedStocks[existingStockIndex] = {
+                            ...updatedStocks[existingStockIndex],
+                            quantity: updatedStocks[existingStockIndex].quantity + quantity
+                        };
+                        updatedPortfolio.stocks = updatedStocks;
+                    } else {
+                        const companyWithQuantity: CompanyWithQuantity = {
+                            ...asset as Company,
+                            quantity
+                        };
+                        updatedPortfolio.stocks = [...player.portfolio.stocks, companyWithQuantity];
+                    }
                 }
 
                 const updatedPlayer = {
@@ -229,12 +290,17 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
                     portfolio: updatedPortfolio
                 };
 
+                console.log(`✅ Куплено ${asset.name} x${quantity} за $${totalCost}`);
+
                 return {
                     ...prev,
                     players: [updatedPlayer, ...prev.players.slice(1)]
                 };
+            } else {
+                // Не хватает денег
+                console.log(`❌ Недостаточно средств! Нужно $${totalCost}, есть $${player.balance}`);
+                return prev;
             }
-            return prev;
         });
     };
 

@@ -11,6 +11,9 @@
 }
 
 .clock-time {
-    font-weight: 700;
-    margin-right: 3px;
+    font-weight: 500;
+}
+
+.clock-icon {
+    margin-right: 2px;
 }

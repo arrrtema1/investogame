@@ -9,6 +9,7 @@ interface AssetCardProps {
     onSell?: (asset: Asset) => void;
     quantity?: number;
     showActions?: boolean;
+    playerBalance?: number;
 }
 
 export const AssetCard: React.FC<AssetCardProps> = ({
@@ -16,25 +17,32 @@ export const AssetCard: React.FC<AssetCardProps> = ({
                                                         onBuy,
                                                         onSell,
                                                         quantity = 0,
-                                                        showActions = true
+                                                        showActions = true,
+                                                        playerBalance,
                                                     }) => {
+    const canAfford = playerBalance !== undefined && playerBalance >= asset.price;
+
     const getAssetIcon = () => {
         if (asset.type === 'bond') return '📊';
         if (asset.type === 'realestate') return '🏠';
+        if (asset.type === 'metal') return '🪙';
         return '📈';
     };
 
     const getAssetTypeLabel = () => {
         if (asset.type === 'bond') return 'Bond';
         if (asset.type === 'realestate') return 'Real Estate';
+        if (asset.type === 'metal') return 'Metals';
         return 'Stock';
     };
 
     const getRiskLevel = () => {
         if (asset.type === 'bond') return 'low';
+        if (asset.type === 'metal') return 'low';
         if (asset.type === 'realestate') return 'medium';
         return 'high';
     };
+
 
     return (
         <div className={`asset-card ${getRiskLevel()}`}>
@@ -68,7 +76,11 @@ export const AssetCard: React.FC<AssetCardProps> = ({
                 {showActions && (
                     <div className="asset-actions">
                         {onBuy && (
-                            <Button size="small" variant="success" onClick={() => onBuy(asset)}>
+                            <Button size="small"
+                                    variant="success"
+                                    onClick={() => onBuy(asset)}
+                                    disabled={!canAfford}
+                            >
                                 Buy
                             </Button>
                         )}
