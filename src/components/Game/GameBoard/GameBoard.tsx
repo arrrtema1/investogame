@@ -51,8 +51,8 @@ export const GameBoard: React.FC = () => {
             <div key={sector.id} className={sectorClass} style={{ borderColor: sector.color }}>
                 <div className="sector-header">
                     <h4>{sector.name}</h4>
-                    {sector.marketType === 'crisis' && <span className="badge crisis-badge">КРИЗИС</span>}
-                    {sector.marketType === 'growth' && <span className="badge growth-badge">РОСТ</span>}
+                    {sector.marketType === 'crisis' && <span className="badge crisis-badge">Crisis</span>}
+                    {sector.marketType === 'growth' && <span className="badge growth-badge">Growth</span>}
                 </div>
                 <div className="companies">
                     {sector.companies.map(company => (
@@ -247,7 +247,7 @@ export const GameBoard: React.FC = () => {
             <div className="game-content">
                 <div className="left-panel">
                     <div className="player-info">
-                        <h3>👤 {GAME_CONSTANTS.PLAYER_NAME}</h3>
+                        <h3>👤 {currentPlayer.name || 'Player'}</h3>
                         <div className="balance-large">${currentPlayer.balance}</div>
                         <div className="player-stats">
                             <div>Income: ${currentPlayer.totalIncome}</div>
@@ -264,8 +264,8 @@ export const GameBoard: React.FC = () => {
                         <h3>🎮 Controls</h3>
                         <Button
                             onClick={nextYear}
-                            disabled={gameState.phase !== 'year_end'}
-                            variant="success"
+                            disabled={gameState.phase !== 'trading'}
+                            variant="warning"
                             size="large"
                         >
                             Ready 📅
@@ -279,7 +279,7 @@ export const GameBoard: React.FC = () => {
                             className={`tab ${selectedTab === 'market' ? 'active' : ''}`}
                             onClick={() => setSelectedTab('market')}
                         >
-                            📈 Market
+                            📈 Stocks
                         </button>
                         <button
                             className={`tab ${selectedTab === 'bonds' ? 'active' : ''}`}
@@ -354,7 +354,7 @@ export const GameBoard: React.FC = () => {
                         <h2>⚡ CRISIS IN {gameState.selectedSector.name} ⚡</h2>
                         <p>Rolling dice for each company...</p>
                         <Button>Continue</Button>
-                    </div>
+                    </div>r
                 </div>
             )}
         </div>

@@ -79,6 +79,7 @@ export interface Portfolio {
 
 export interface Player {
     id: string;
+    name: string;
     balance: number;
     portfolio: Portfolio;
     totalIncome: number;

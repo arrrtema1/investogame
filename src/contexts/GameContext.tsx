@@ -28,6 +28,7 @@ interface GameContextType {
     processBankruptcy: (company: Company, diceValue: number) => void;
     buyAsset: (asset: Asset, quantity: number) => void;
     sellAsset: (asset: AssetWithQuantity, quantity: number) => void;
+    initializeNewGame: (playerName: string, startingBalance: number) => void;
 }
 
 const initialState: GameState = {
@@ -38,6 +39,7 @@ const initialState: GameState = {
     players: [
         {
             id: 'player1',
+            name: '',
             balance: GAME_CONSTANTS.STARTING_BALANCE,
             portfolio: {
                 stocks: [],
@@ -398,6 +400,27 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
         });
     };
 
+    const initializeNewGame = (playerName: string, startingBalance: number) => {
+        setGameState({
+            ...initialState,
+            players: [
+                {
+                    id: 'player1',
+                    name: playerName,  // Добавить name в тип Player
+                    balance: startingBalance,
+                    portfolio: {
+                        stocks: [],
+                        bonds: [],
+                        realEstate: [],
+                        metals: []
+                    },
+                    totalIncome: 0,
+                    isReady: false
+                }
+            ]
+        });
+    };
+
     return (
         <GameContext.Provider value={{
             gameState,
@@ -410,7 +433,8 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
             applyGrowthEffects,
             processBankruptcy,
             buyAsset,
-            sellAsset
+            sellAsset,
+            initializeNewGame
         }}>
             {children}
         </GameContext.Provider>
