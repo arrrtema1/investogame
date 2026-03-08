@@ -188,6 +188,56 @@
     font-size: 0.8rem;
 }
 
+.language-selector {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin: 10px 0;
+}
+
+.language-option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 8px 4px;
+    border: 1px solid #e2e8f0;
+    background: white;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.language-option .flag {
+    font-family: 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', sans-serif;
+    font-size: 1.2rem;
+}
+
+.language-option:hover {
+    background: #f8fafc;
+    transform: translateY(-2px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.language-option.active {
+    border-color: #667eea;
+    background: #ebf4ff;
+}
+
+.language-option .flag {
+    font-size: 1.5rem;
+    margin-bottom: 4px;
+}
+
+.language-option .lang-name {
+    font-size: 0.75rem;
+    color: #4b5563;
+}
+
+.language-option.active .lang-name {
+    color: #667eea;
+    font-weight: 600;
+}
+
 /* Responsive */
 @media (max-width: 480px) {
     .logo-section h1 {
@@ -199,6 +249,10 @@
     }
 
     .balance-presets {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .language-selector {
         grid-template-columns: repeat(2, 1fr);
     }
 }

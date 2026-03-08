@@ -1,8 +1,13 @@
 import React, { useState } from 'react';
 import { useGame } from '../../contexts/GameContext';
+import { useLanguage } from '../../contexts/LanguageContext';
 import { Button } from '../UI/Button';
 import { GAME_CONSTANTS } from '../../data/constants';
+import { Language } from '../../data/translations';
 import './StartMenu.css';
+
+
+const currentYear = new Date().getFullYear();
 
 export interface StartMenuProps {
     onStartGame: (playerName: string, startingBalance: number) => void;
@@ -10,6 +15,7 @@ export interface StartMenuProps {
 
 export const StartMenu: React.FC<StartMenuProps> = ({ onStartGame }) => {
     const { initializeNewGame } = useGame();
+    const { language, setLanguage, t } = useLanguage();
     const [playerName, setPlayerName] = useState('Player');
     const [startingBalance, setStartingBalance] = useState(GAME_CONSTANTS.STARTING_BALANCE);
     const [showSettings, setShowSettings] = useState(false);
@@ -22,22 +28,25 @@ export const StartMenu: React.FC<StartMenuProps> = ({ onStartGame }) => {
         }
     };
 
+    const languages: { code: Language; flag: string }[] = [
+        { code: 'en', flag: '🇺🇸'},
+        { code: 'ru', flag: '🇷🇺'}
+    ];
+
     return (
         <div className="start-menu">
             <div className="start-menu-container">
                 <div className="logo-section">
                     <h1>InvestoGame</h1>
-                    <p className="tagline">investoga.me</p>
                 </div>
 
                 <div className="menu-content">
                     <div className="input-group">
-                        <label>Your name:</label>
+                        <label>{t.yourName}</label>
                         <input
                             type="text"
                             value={playerName}
                             onChange={(e) => setPlayerName(e.target.value)}
-                            placeholder="Enter your name"
                             maxLength={20}
                             className="player-name-input"
                         />
@@ -45,8 +54,24 @@ export const StartMenu: React.FC<StartMenuProps> = ({ onStartGame }) => {
 
                     {showSettings && (
                         <div className="settings-group">
+                            {/* Язык */}
                             <div className="input-group">
-                                <label>Starting balance: ${startingBalance.toLocaleString()}</label>
+                                <label>{t.language}</label>
+                                <div className="language-selector">
+                                    {languages.map(lang => (
+                                        <button
+                                            key={lang.code}
+                                            className={`language-option ${language === lang.code ? 'active' : ''}`}
+                                            onClick={() => setLanguage(lang.code)}
+                                        >
+                                            <span className="flag">{lang.flag}</span>
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                            {/* Начальный баланс */}
+                            <div className="input-group">
+                                <label>{t.startingBalance}: ${startingBalance.toLocaleString()}</label>
                                 <input
                                     type="range"
                                     min="1000"
@@ -57,10 +82,10 @@ export const StartMenu: React.FC<StartMenuProps> = ({ onStartGame }) => {
                                     className="balance-slider"
                                 />
                                 <div className="balance-presets">
-                                    <button onClick={() => setStartingBalance(2000)}>$2k</button>
-                                    <button onClick={() => setStartingBalance(5000)}>$5k</button>
-                                    <button onClick={() => setStartingBalance(10000)}>$10k</button>
-                                    <button onClick={() => setStartingBalance(25000)}>$25k</button>
+                                    <button onClick={() => setStartingBalance(2000)}>$2K</button>
+                                    <button onClick={() => setStartingBalance(5000)}>$5K</button>
+                                    <button onClick={() => setStartingBalance(10000)}>$10K</button>
+                                    <button onClick={() => setStartingBalance(25000)}>$25K</button>
                                 </div>
                             </div>
                         </div>
@@ -74,7 +99,7 @@ export const StartMenu: React.FC<StartMenuProps> = ({ onStartGame }) => {
                             disabled={!playerName.trim()}
                             fullWidth
                         >
-                            🚀 Start Game
+                            🚀 {t.startGame}
                         </Button>
 
                         <Button
@@ -83,24 +108,24 @@ export const StartMenu: React.FC<StartMenuProps> = ({ onStartGame }) => {
                             onClick={() => setShowSettings(!showSettings)}
                             fullWidth
                         >
-                            {showSettings ? '▲ Hide settings' : '▼ Game settings'}
+                            {showSettings ? `▲ ${t.hideSettings}` : `▼ ${t.gameSettings}`}
                         </Button>
                     </div>
 
                     <div className="game-rules">
-                        <h3>📖 How to play</h3>
+                        <h3>📖 {t.howToPlay}</h3>
                         <ul>
-                            <li>Start with ${startingBalance.toLocaleString()}</li>
-                            <li>Play {GAME_CONSTANTS.MAX_YEARS} years</li>
-                            <li>Buy stocks, bonds, and real estate</li>
-                            <li>Earn income from your investments</li>
-                            <li>Goal: Have more than ${startingBalance.toLocaleString()} after {GAME_CONSTANTS.MAX_YEARS} years</li>
+                            <li>{t.startWith + startingBalance.toLocaleString()}</li>
+                            <li>{t.playYears.replace('{years}', GAME_CONSTANTS.MAX_YEARS.toString())}</li>
+                            <li>{t.buyStocks}</li>
+                            <li>{t.earnIncome}</li>
+                            <li>{t.goal.replace('{years}', GAME_CONSTANTS.MAX_YEARS.toString()).replace('{money}', startingBalance.toLocaleString())}</li>
                         </ul>
                     </div>
                 </div>
 
                 <div className="footer">
-                    <p>© 2026 InvestoGame. All rights reserved.</p>
+                    <p>© {currentYear} InvestoGame. {t.allRightsReserved}</p>
                 </div>
             </div>
         </div>

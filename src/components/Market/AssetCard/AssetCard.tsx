@@ -1,6 +1,7 @@
 import React from 'react';
 import { Asset } from '../../../types/game.types';
 import { Button } from '../../UI/Button';
+import { useLanguage } from '../../../contexts/LanguageContext';
 import './AssetCard.css';
 
 interface AssetCardProps {
@@ -21,6 +22,7 @@ export const AssetCard: React.FC<AssetCardProps> = ({
                                                         playerBalance,
                                                     }) => {
     const canAfford = playerBalance !== undefined && playerBalance >= asset.price;
+    const { t } = useLanguage();
 
     const getAssetIcon = () => {
         if (asset.type === 'bond') return '📊';
@@ -81,12 +83,12 @@ export const AssetCard: React.FC<AssetCardProps> = ({
                                     onClick={() => onBuy(asset)}
                                     disabled={!canAfford}
                             >
-                                Buy
+                                {t.buttons.buy}
                             </Button>
                         )}
                         {onSell && quantity > 0 && (
                             <Button size="small" variant="danger" onClick={() => onSell(asset)}>
-                                Sell
+                                {t.buttons.sell}
                             </Button>
                         )}
                     </div>

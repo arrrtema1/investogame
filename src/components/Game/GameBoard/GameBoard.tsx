@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useGame } from '../../../contexts/GameContext';
+import { useLanguage } from '../../../contexts/LanguageContext';
 import { Button } from '../../UI/Button';
 import { Clock } from '../../UI/Clock'
 import { AssetCard } from '../../Market/AssetCard';
@@ -8,7 +9,9 @@ import { GAME_CONSTANTS } from '../../../data/constants';
 import './GameBoard.css';
 
 export const GameBoard: React.FC = () => {
-    const { gameState, setGamePhase, nextYear, resetGame, buyAsset } = useGame();
+    const { gameState, setGamePhase, nextYear, resetGame, buyAsset, sellAsset } = useGame();
+    const { t } = useLanguage();
+
     const [selectedTab, setSelectedTab] = useState<'market' | 'bonds' | 'realestate' | 'portfolio' | 'metals'>('market');
 
     const currentPlayer = gameState.players[0];
@@ -81,7 +84,7 @@ export const GameBoard: React.FC = () => {
                                         onClick={() => handleBuyAsset(company)}
                                         disabled={currentPlayer.balance < company.price}
                                     >
-                                        Buy
+                                        {t.buttons.buy}
                                     </Button>
                                 </div>
                             )}
@@ -146,15 +149,22 @@ export const GameBoard: React.FC = () => {
     const renderPortfolio = () => {
         const portfolio = currentPlayer.portfolio;
 
+        const handleSellAsset = (asset: any) => {
+            if (gameState.phase === 'trading') {
+                sellAsset(asset, 1);
+                console.log(`Sold: ${asset.name} x1 for $${asset.price}`);
+            }
+        };
+
         return (
             <div className="portfolio-view">
                 <div className="portfolio-summary">
                     <div className="summary-item">
-                        <span>Cash:</span>
+                        <span>{t.portfolio.cash}:</span>
                         <span className="cash-amount">${currentPlayer.balance}</span>
                     </div>
                     <div className="summary-item">
-                        <span>Total Value:</span>
+                        <span>{t.portfolio.totalValue}:</span>
                         <span className="total-amount">
                             ${currentPlayer.balance +
                             portfolio.stocks.reduce((sum, s) => sum + (s.price * s.quantity), 0) +
@@ -167,11 +177,20 @@ export const GameBoard: React.FC = () => {
 
                 {portfolio.stocks.length > 0 && (
                     <div className="portfolio-section">
-                        <h4>📈 Stocks</h4>
+                        <h4>📈 {t.tabs.stocks}</h4>
                         {portfolio.stocks.map(stock => (
                             <div key={stock.id} className="portfolio-item">
                                 <span>{stock.name} x{stock.quantity}</span>
                                 <span>${stock.price * stock.quantity}</span>
+                                {gameState.phase === 'trading' && (
+                                    <Button
+                                        onClick={() => handleSellAsset(stock)}
+                                        size={'small'}
+                                        variant={'danger'}
+                                    >
+                                        {t.buttons.sell}
+                                    </Button>
+                                )}
                             </div>
                         ))}
                     </div>
@@ -179,11 +198,20 @@ export const GameBoard: React.FC = () => {
 
                 {portfolio.bonds.length > 0 && (
                     <div className="portfolio-section">
-                        <h4>📊 Bonds</h4>
+                        <h4>📊 {t.tabs.bonds}</h4>
                         {portfolio.bonds.map(bond => (
                             <div key={bond.id} className="portfolio-item">
                                 <span>{bond.name} x{bond.quantity}</span>
                                 <span>${bond.price * bond.quantity}</span>
+                                {gameState.phase === 'trading' && (
+                                    <Button
+                                        onClick={() => handleSellAsset(bond)}
+                                        size={'small'}
+                                        variant={'danger'}
+                                    >
+                                        {t.buttons.sell}
+                                    </Button>
+                                )}
                             </div>
                         ))}
                     </div>
@@ -191,11 +219,20 @@ export const GameBoard: React.FC = () => {
 
                 {portfolio.realEstate.length > 0 && (
                     <div className="portfolio-section">
-                        <h4>🏠 Real Estate</h4>
+                        <h4>🏠 {t.tabs.realEstate}</h4>
                         {portfolio.realEstate.map(property => (
                             <div key={property.id} className="portfolio-item">
                                 <span>{property.name} x{property.quantity}</span>
                                 <span>${property.price * property.quantity}</span>
+                                {gameState.phase === 'trading' && (
+                                    <Button
+                                        onClick={() => handleSellAsset(property)}
+                                        size={'small'}
+                                        variant={'danger'}
+                                    >
+                                        {t.buttons.sell}
+                                    </Button>
+                                )}
                             </div>
                         ))}
                     </div>
@@ -203,11 +240,20 @@ export const GameBoard: React.FC = () => {
 
                 {portfolio.metals.length > 0 && (
                     <div className="portfolio-section">
-                        <h4>🪙 Metals</h4>
-                        {portfolio.metals.map(property => (
-                            <div key={property.id} className="portfolio-item">
-                                <span>{property.name} x{property.quantity}</span>
-                                <span>${property.price * property.quantity}</span>
+                        <h4>🪙 {t.tabs.metals}</h4>
+                        {portfolio.metals.map(metal => (
+                            <div key={metal.id} className="portfolio-item">
+                                <span>{metal.name} x{metal.quantity}</span>
+                                <span>${metal.price * metal.quantity}</span>
+                                {gameState.phase === 'trading' && (
+                                    <Button
+                                        onClick={() => handleSellAsset(metal)}
+                                        size={'small'}
+                                        variant={'danger'}
+                                    >
+                                        {t.buttons.sell}
+                                    </Button>
+                                )}
                             </div>
                         ))}
                     </div>
@@ -218,7 +264,7 @@ export const GameBoard: React.FC = () => {
                 portfolio.realEstate.length === 0 &&
                 portfolio.metals.length === 0 && (
                     <div className="empty-portfolio">
-                        No assets yet. Start trading!
+                        {t.portfolio.empty}
                     </div>
                 )}
             </div>
@@ -268,7 +314,7 @@ export const GameBoard: React.FC = () => {
                             variant="warning"
                             size="large"
                         >
-                            Ready 📅
+                            {t.buttons.nextYear} 📅
                         </Button>
                     </div>
                 </div>
@@ -279,31 +325,31 @@ export const GameBoard: React.FC = () => {
                             className={`tab ${selectedTab === 'market' ? 'active' : ''}`}
                             onClick={() => setSelectedTab('market')}
                         >
-                            📈 Stocks
+                            📈 {t.tabs.stocks}
                         </button>
                         <button
                             className={`tab ${selectedTab === 'bonds' ? 'active' : ''}`}
                             onClick={() => setSelectedTab('bonds')}
                         >
-                            📊 Bonds
+                            📊 {t.tabs.bonds}
                         </button>
                         <button
                             className={`tab ${selectedTab === 'realestate' ? 'active' : ''}`}
                             onClick={() => setSelectedTab('realestate')}
                         >
-                            🏠 Real Estate
+                            🏠 {t.tabs.realEstate}
                         </button>
                         <button
                             className={`tab ${selectedTab === 'metals' ? 'active' : ''}`}
                             onClick={() => setSelectedTab('metals')}
                         >
-                            🪙 Metals
+                            🪙 {t.tabs.metals}
                         </button>
                         <button
                             className={`tab ${selectedTab === 'portfolio' ? 'active' : ''}`}
                             onClick={() => setSelectedTab('portfolio')}
                         >
-                            💼 Portfolio
+                            💼 {t.tabs.portfolio}
                         </button>
                     </div>
 

@@ -366,6 +366,34 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
                         players: [updatedPlayer, ...prev.players.slice(1)]
                     };
                 }
+            }  else if (asset.type === 'metal') {
+                const assetIndex = player.portfolio.metals.findIndex(a => a.id === asset.id);
+                if (assetIndex !== -1) {
+                    const currentAsset = player.portfolio.metals[assetIndex];
+                    const newQuantity = currentAsset.quantity - quantity;
+
+                    let updatedMetals: MetalWithQuantity[];
+                    if (newQuantity <= 0) {
+                        updatedMetals = player.portfolio.metals.filter((_, i) => i !== assetIndex);
+                    } else {
+                        updatedMetals = [...player.portfolio.metals];
+                        updatedMetals[assetIndex] = { ...currentAsset, quantity: newQuantity };
+                    }
+
+                    const updatedPlayer = {
+                        ...player,
+                        balance: player.balance + (asset.price * quantity),
+                        portfolio: {
+                            ...player.portfolio,
+                            metals: updatedMetals
+                        }
+                    };
+
+                    return {
+                        ...prev,
+                        players: [updatedPlayer, ...prev.players.slice(1)]
+                    };
+                }
             } else {
                 const assetIndex = player.portfolio.stocks.findIndex(a => a.id === asset.id);
                 if (assetIndex !== -1) {

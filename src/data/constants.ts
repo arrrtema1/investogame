@@ -1,5 +1,5 @@
 export const GAME_CONSTANTS = {
-    MAX_YEARS: 20,
-    STARTING_BALANCE: 10000, // 10000$ for tests
+    MAX_YEARS: 10,
+    STARTING_BALANCE: 2000,
     PLAYER_NAME: 'Player'
 };

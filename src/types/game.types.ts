@@ -68,7 +68,7 @@ export interface MetalWithQuantity extends Metal {
 }
 
 export type Asset = Company | Bond | RealEstate | Metal;
-export type AssetWithQuantity = CompanyWithQuantity | BondWithQuantity | RealEstateWithQuantity;
+export type AssetWithQuantity = CompanyWithQuantity | BondWithQuantity | RealEstateWithQuantity | MetalWithQuantity;
 
 export interface Portfolio {
     stocks: CompanyWithQuantity[];
