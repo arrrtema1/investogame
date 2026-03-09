@@ -23,17 +23,18 @@ export const translations = {
         year: 'Year',
         income: 'Income',
         assets: 'Assets',
+        controls: 'Controls',
         phase: {
-            trading: '💹 Trading Session',
-            coin_flip: '🎲 Coin Flip',
-            sector_select: '🎯 Sector Selection',
-            crisis_dice: '⚡ Crisis - Dice Roll',
-            income: '💰 Income',
-            year_end: '📊 Year End',
+            coin_flip: '🎲 Coin flip',
+            sector_select: '🎯 Selecting sector',
+            crisis_dice: '⚡ Choosing what company has crisis',
+            income: '💰 Generating income',
+            trading: '💹 Trading',
+            year_end: '📊 End of the year',
         },
         marketType: {
             crisis: '🔴 Crisis in one sector',
-            growth: '🟢 Growth in all sectors',
+            growth: '🟢 Growth in one sector',
         },
 
         // Вкладки
@@ -50,8 +51,6 @@ export const translations = {
             buy: 'Buy',
             sell: 'Sell',
             nextYear: 'Ready',
-            flipCoin: 'Flip Coin',
-            continue: 'Continue',
         },
 
         // Портфолио
@@ -83,25 +82,26 @@ export const translations = {
         playYears: 'Играете {years} лет',
         buyStocks: 'Покупайте акции, облигации и недвижимость',
         earnIncome: 'Получайте доход от инвестиций',
-        goal: 'Цель: иметь более ${money} к концу игры (через {years} лет)',
+        goal: 'Цель: иметь более ${money} через {years} лет',
         allRightsReserved: 'Все права защищены',
 
         // Игровой интерфейс
         player: 'Игрок',
         year: 'Год',
         income: 'Доход',
-        assets: 'Активы',
+        assets: 'Активов',
+        controls: 'Управление',
         phase: {
-            trading: '💹 Торговая сессия',
             coin_flip: '🎲 Бросок монетки',
             sector_select: '🎯 Выбор сектора',
-            crisis_dice: '⚡ Кризис - Бросок кубиков',
+            crisis_dice: '⚡ Определение у какой компании кризис',
             income: '💰 Получение дохода',
+            trading: '💹 Торговля',
             year_end: '📊 Конец года',
         },
         marketType: {
             crisis: '🔴 Кризис в одном секторе',
-            growth: '🟢 Рост во всех секторах',
+            growth: '🟢 Рост в одном секторе секторах',
         },
 
         // Вкладки
@@ -118,8 +118,6 @@ export const translations = {
             buy: 'Купить',
             sell: 'Продать',
             nextYear: 'Готов',
-            flipCoin: 'Бросить монетку',
-            continue: 'Продолжить',
         },
 
         // Портфолио

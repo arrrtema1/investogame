@@ -4,6 +4,7 @@ import { useLanguage } from '../../contexts/LanguageContext';
 import { Button } from '../UI/Button';
 import { GAME_CONSTANTS } from '../../data/constants';
 import { Language } from '../../data/translations';
+import { useNavigate } from 'react-router-dom';
 import './StartMenu.css';
 
 
@@ -13,7 +14,8 @@ export interface StartMenuProps {
     onStartGame: (playerName: string, startingBalance: number) => void;
 }
 
-export const StartMenu: React.FC<StartMenuProps> = ({ onStartGame }) => {
+export const StartMenu: React.FC = () => {
+    const navigate = useNavigate();
     const { initializeNewGame } = useGame();
     const { language, setLanguage, t } = useLanguage();
     const [playerName, setPlayerName] = useState('Player');
@@ -24,7 +26,7 @@ export const StartMenu: React.FC<StartMenuProps> = ({ onStartGame }) => {
         if (playerName.trim()) {
             // Инициализировать игру с выбранными параметрами
             initializeNewGame(playerName.trim(), startingBalance);
-            onStartGame(playerName.trim(), startingBalance);
+            navigate('/game');
         }
     };
 

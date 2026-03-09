@@ -1,27 +1,24 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { GameProvider } from './contexts/GameContext';
 import { LanguageProvider } from './contexts/LanguageContext';
 import { GameBoard } from './components/Game/GameBoard';
-import { StartMenu } from './components/StartMenu/StartMenu';
+import { StartMenu } from './components/StartMenu';
 import './App.css';
 
 function App() {
-    const [gameStarted, setGameStarted] = useState(false);
-
-    const handleStartGame = (playerName: string, startingBalance: number) => {
-        setGameStarted(true);
-    };
-
     return (
         <LanguageProvider>
             <GameProvider>
-                <div className="App">
-                    {!gameStarted ? (
-                        <StartMenu onStartGame={handleStartGame} />
-                    ) : (
-                        <GameBoard />
-                    )}
-                </div>
+                <BrowserRouter>
+                    <div className="App">
+                        <Routes>
+                            <Route path="/" element={<StartMenu />} />
+                            <Route path="/game" element={<GameBoard />} />
+                            <Route path="*" element={<Navigate to="/" replace />} />
+                        </Routes>
+                    </div>
+                </BrowserRouter>
             </GameProvider>
         </LanguageProvider>
     );

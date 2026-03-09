@@ -6,9 +6,39 @@ export const INITIAL_SECTORS: Sector[] = [
         name: 'Automakers',
         color: 'red',
         companies: [
-            { id: 101, name: 'Toyota', price: 3000, income: 10, size: 'large', sectorId: 2, type: 'stock' },
-            { id: 102, name: 'Ford', price: 2200, income: 10, size: 'large', sectorId: 2, type: 'stock' },
-            { id: 103, name: 'Tesla', price: 1500, income: 10, size: 'medium', sectorId: 2, type: 'stock' }
+            {
+                id: 101,
+                name: 'Toyota',
+                basePrice: 3000,
+                baseIncome: 10,
+                currentPrice: 3000,
+                currentIncome: 10,
+                size: 'large',
+                sectorId: 1,
+                type: 'stock'
+            },
+            {
+                id: 102,
+                name: 'Ford',
+                basePrice: 2200,
+                baseIncome: 10,
+                currentPrice: 2200,
+                currentIncome: 10,
+                size: 'large',
+                sectorId: 1,
+                type: 'stock'
+            },
+            {
+                id: 103,
+                name: 'Tesla',
+                basePrice: 1500,
+                baseIncome: 10,
+                currentPrice: 1500,
+                currentIncome: 10,
+                size: 'medium',
+                sectorId: 1,
+                type: 'stock'
+            }
         ]
     },
     {
@@ -16,9 +46,39 @@ export const INITIAL_SECTORS: Sector[] = [
         name: 'IT Development',
         color: 'orange',
         companies: [
-            { id: 201, name: 'Google', price: 2500, income: 15, size: 'large', sectorId: 1, type: 'stock' },
-            { id: 202, name: 'OpenAI', price: 1500, income: 20, size: 'medium', sectorId: 1, type: 'stock' },
-            { id: 203, name: 'JetBrains', price: 1000, income: 25, size: 'small', sectorId: 1, type: 'stock' }
+            {
+                id: 201,
+                name: 'Google',
+                basePrice: 2500,
+                baseIncome: 15,
+                currentPrice: 2500,
+                currentIncome: 15,
+                size: 'large',
+                sectorId: 2,
+                type: 'stock'
+            },
+            {
+                id: 202,
+                name: 'OpenAI',
+                basePrice: 1500,
+                baseIncome: 20,
+                currentPrice: 1500,
+                currentIncome: 20,
+                size: 'medium',
+                sectorId: 2,
+                type: 'stock'
+            },
+            {
+                id: 203,
+                name: 'JetBrains',
+                basePrice: 1000,
+                baseIncome: 25,
+                currentPrice: 1000,
+                currentIncome: 25,
+                size: 'small',
+                sectorId: 2,
+                type: 'stock'
+            }
         ]
     },
     {
@@ -26,8 +86,28 @@ export const INITIAL_SECTORS: Sector[] = [
         name: 'Oil companies',
         color: 'black',
         companies: [
-            { id: 301, name: 'ExxonMobil', price: 3500, income: 10, size: 'large', sectorId: 3, type: 'stock' },
-            { id: 302, name: 'EOG Resources', price: 3000, income: 10, size: 'large', sectorId: 3, type: 'stock' }
+            {
+                id: 301,
+                name: 'ExxonMobil',
+                basePrice: 3500,
+                baseIncome: 10,
+                currentPrice: 3500,
+                currentIncome: 10,
+                size: 'large',
+                sectorId: 3,
+                type: 'stock'
+            },
+            {
+                id: 302,
+                name: 'EOG Resources',
+                basePrice: 3000,
+                baseIncome: 10,
+                currentPrice: 3000,
+                currentIncome: 10,
+                size: 'large',
+                sectorId: 3,
+                type: 'stock'
+            }
         ]
     },
     {
@@ -35,8 +115,28 @@ export const INITIAL_SECTORS: Sector[] = [
         name: 'Furniture retailers',
         color: 'violet',
         companies: [
-            { id: 401, name: 'HomeDepot', price: 750, income: 5, size: 'medium', sectorId: 4, type: 'stock' },
-            { id: 402, name: 'OBI', price: 500, income: 7.5, size: 'small', sectorId: 4, type: 'stock' }
+            {
+                id: 401,
+                name: 'HomeDepot',
+                basePrice: 750,
+                baseIncome: 5,
+                currentPrice: 750,
+                currentIncome: 5,
+                size: 'medium',
+                sectorId: 4,
+                type: 'stock'
+            },
+            {
+                id: 402,
+                name: 'OBI',
+                basePrice: 500,
+                baseIncome: 7.5,
+                currentPrice: 500,
+                currentIncome: 7.5,
+                size: 'small',
+                sectorId: 4,
+                type: 'stock'
+            }
         ]
     }
 ];

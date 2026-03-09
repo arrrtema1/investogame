@@ -32,9 +32,9 @@ export const SectorCard: React.FC<SectorCardProps> = ({ sector, isAffected }) =>
                 {company.size === 'medium' && ' 🏬'}
                 {company.size === 'small' && ' 🏪'}
             </span>
-                        <span className="company-price">${company.price}</span>
-                        <span className={`company-income ${company.income > 0 ? 'positive' : 'negative'}`}>
-              {company.income}%
+                        <span className="company-price">${company.currentPrice}</span>
+                        <span className={`company-income ${company.currentIncome > 0 ? 'positive' : 'negative'}`}>
+              {company.currentIncome}%
             </span>
                     </div>
                 ))}

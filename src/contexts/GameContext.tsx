@@ -4,14 +4,16 @@ import {
     GameState,
     GamePhase,
     Sector,
-    Company,
+    Stock,
     Bond,
     RealEstate,
+    Metal,
     Asset,
-    CompanyWithQuantity,
+    StockWithQuantity,
     BondWithQuantity,
     RealEstateWithQuantity,
-    AssetWithQuantity, Metal, MetalWithQuantity
+    MetalWithQuantity,
+    AssetWithQuantity
 } from '../types/game.types';
 import { INITIAL_SECTORS, INITIAL_BONDS, INITIAL_REAL_ESTATE, INITIAL_METALS } from '../data/initialData';
 import { GAME_CONSTANTS } from '../data/constants';
@@ -21,11 +23,10 @@ interface GameContextType {
     setGamePhase: (phase: GamePhase) => void;
     setMarketType: (type: 'crisis' | 'growth' | null) => void;
     setSelectedSector: (sector: Sector | null) => void;
-    resetGame: () => void;
     nextYear: () => void;
     applyCrisisEffects: (sector: Sector) => void;
     applyGrowthEffects: (sector: Sector) => void;
-    processBankruptcy: (company: Company, diceValue: number) => void;
+    processBankruptcy: (stock: Stock, diceValue: number) => void;
     buyAsset: (asset: Asset, quantity: number) => void;
     sellAsset: (asset: AssetWithQuantity, quantity: number) => void;
     initializeNewGame: (playerName: string, startingBalance: number) => void;
@@ -53,10 +54,10 @@ const initialState: GameState = {
     ],
     sectors: INITIAL_SECTORS.map(sector => ({
         ...sector,
-        companies: sector.companies.map(company => ({
-            ...company,
-            originalPrice: company.price,
-            originalIncome: company.income
+        companies: sector.companies.map(stock => ({
+            ...stock,
+            originalPrice: stock.basePrice,
+            originalIncome: stock.baseIncome
         }))
     })),
     availableBonds: INITIAL_BONDS,
@@ -81,21 +82,18 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
         setGameState(prev => ({ ...prev, selectedSector: sector }));
     };
 
-    const resetGame = () => {
-        setGameState(initialState);
-    };
-
     const nextYear = () => {
         if (gameState.currentYear < 10) {
             setGameState(prev => {
-                const restoredSectors = prev.sectors.map(sector => ({
+                // Сбрасываем к базовым ценам и доходам
+                const resetSectors = prev.sectors.map(sector => ({
                     ...sector,
                     isAffected: false,
                     marketType: undefined,
-                    companies: sector.companies.map(company => ({
-                        ...company,
-                        price: company.originalPrice || company.price,
-                        income: company.originalIncome || company.income,
+                    companies: sector.companies.map(stock => ({
+                        ...stock,
+                        currentPrice: stock.basePrice,
+                        currentIncome: stock.baseIncome,
                         isBankrupt: false,
                         diceValue: undefined
                     }))
@@ -107,7 +105,7 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
                     phase: 'coin_flip' as GamePhase,
                     marketType: null,
                     selectedSector: null,
-                    sectors: restoredSectors,
+                    sectors: resetSectors,
                     players: prev.players.map(player => ({
                         ...player,
                         isReady: false
@@ -125,11 +123,21 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
                         ...s,
                         isAffected: true,
                         marketType: 'crisis' as const,
-                        companies: s.companies.map(company => ({
-                            ...company,
-                            price: Math.floor((company.originalPrice || company.price) * 0.8),
-                            income: Math.floor((company.originalIncome || company.income) * 0.7)
-                        }))
+                        companies: s.companies.map(stock => {
+                            let priceMultiplier = 1.0;
+
+                            switch(stock.size) {
+                                case 'small': priceMultiplier = 0.85; break;
+                                case 'medium': priceMultiplier = 0.90; break;
+                                case 'large': priceMultiplier = 0.95; break;
+                            }
+
+                            return {
+                                ...stock,
+                                currentPrice: Math.floor(stock.basePrice * priceMultiplier),
+                                currentIncome: 0
+                            };
+                        })
                     };
                 }
                 return s;
@@ -151,11 +159,31 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
                         ...s,
                         isAffected: true,
                         marketType: 'growth' as const,
-                        companies: s.companies.map(company => ({
-                            ...company,
-                            price: Math.floor((company.originalPrice || company.price) * 1.2),
-                            income: Math.floor((company.originalIncome || company.income) * 1.15)
-                        }))
+                        companies: s.companies.map(stock => {
+                            let priceMultiplier = 1.0;
+                            let incomeBonus = 0;
+
+                            switch(stock.size) {
+                                case 'small':
+                                    priceMultiplier = 1.15;
+                                    incomeBonus = 15;
+                                    break;
+                                case 'medium':
+                                    priceMultiplier = 1.10;
+                                    incomeBonus = 10;
+                                    break;
+                                case 'large':
+                                    priceMultiplier = 1.05;
+                                    incomeBonus = 5;
+                                    break;
+                            }
+
+                            return {
+                                ...stock,
+                                currentPrice: Math.floor(stock.basePrice * priceMultiplier),
+                                currentIncome: stock.baseIncome + incomeBonus
+                            };
+                        })
                     };
                 }
                 return s;
@@ -169,33 +197,32 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
         });
     };
 
-    const processBankruptcy = (company: Company, diceValue: number) => {
+    const processBankruptcy = (stock: Stock, diceValue: number) => {
         setGameState(prev => {
+            // Удаляем компанию из сектора
             const updatedSectors = prev.sectors.map(sector => {
-                if (sector.id === company.sectorId) {
+                if (sector.id === stock.sectorId) {
                     return {
                         ...sector,
-                        companies: sector.companies.map(c => {
-                            if (c.id === company.id) {
-                                const threshold = c.size === 'large' ? 5 : c.size === 'medium' ? 4 : 3;
-                                const isBankrupt = diceValue >= threshold;
-                                return {
-                                    ...c,
-                                    diceValue,
-                                    isBankrupt,
-                                    price: isBankrupt ? 0 : c.price
-                                };
-                            }
-                            return c;
-                        })
+                        companies: sector.companies.filter(c => c.id !== stock.id)
                     };
                 }
                 return sector;
             });
 
+            // Удаляем из портфеля игрока
+            const updatedPlayers = prev.players.map(player => ({
+                ...player,
+                portfolio: {
+                    ...player.portfolio,
+                    stocks: player.portfolio.stocks.filter(s => s.id !== stock.id)
+                }
+            }));
+
             return {
                 ...prev,
-                sectors: updatedSectors
+                sectors: updatedSectors,
+                players: updatedPlayers
             };
         });
     };
@@ -203,17 +230,28 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
     const buyAsset = (asset: Asset, quantity: number) => {
         setGameState(prev => {
             const player = prev.players[0];
-            const totalCost = asset.price * quantity;
+
+            // Получаем цену в зависимости от типа актива
+            let price = 0;
+            if (asset.type === 'stock') {
+                price = (asset as Stock).currentPrice;
+            } else if (asset.type === 'bond') {
+                price = (asset as Bond).price;
+            } else if (asset.type === 'realestate') {
+                price = (asset as RealEstate).price;
+            } else if (asset.type === 'metal') {
+                price = (asset as Metal).price;
+            }
+
+            const totalCost = price * quantity;
 
             if (player.balance >= totalCost) {
                 let updatedPortfolio = { ...player.portfolio };
 
                 if (asset.type === 'bond') {
-                    // Проверить, есть ли уже такая облигация
                     const existingBondIndex = player.portfolio.bonds.findIndex(b => b.id === asset.id);
 
                     if (existingBondIndex >= 0) {
-                        // Если есть - увеличить количество
                         const updatedBonds = [...player.portfolio.bonds];
                         updatedBonds[existingBondIndex] = {
                             ...updatedBonds[existingBondIndex],
@@ -221,16 +259,14 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
                         };
                         updatedPortfolio.bonds = updatedBonds;
                     } else {
-                        // Если нет - добавить новую
                         const bondWithQuantity: BondWithQuantity = {
-                            ...asset as Bond,
+                            ...(asset as Bond),
                             quantity
                         };
                         updatedPortfolio.bonds = [...player.portfolio.bonds, bondWithQuantity];
                     }
                 }
                 else if (asset.type === 'realestate') {
-                    // Аналогично для недвижимости
                     const existingREIndex = player.portfolio.realEstate.findIndex(r => r.id === asset.id);
 
                     if (existingREIndex >= 0) {
@@ -242,7 +278,7 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
                         updatedPortfolio.realEstate = updatedRE;
                     } else {
                         const realEstateWithQuantity: RealEstateWithQuantity = {
-                            ...asset as RealEstate,
+                            ...(asset as RealEstate),
                             quantity
                         };
                         updatedPortfolio.realEstate = [...player.portfolio.realEstate, realEstateWithQuantity];
@@ -260,7 +296,7 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
                         updatedPortfolio.metals = updatedMetals;
                     } else {
                         const metalWithQuantity: MetalWithQuantity = {
-                            ...asset as Metal,
+                            ...(asset as Metal),
                             quantity
                         };
                         updatedPortfolio.metals = [...player.portfolio.metals, metalWithQuantity];
@@ -278,11 +314,11 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
                         };
                         updatedPortfolio.stocks = updatedStocks;
                     } else {
-                        const companyWithQuantity: CompanyWithQuantity = {
-                            ...asset as Company,
+                        const stockWithQuantity: StockWithQuantity = {
+                            ...(asset as Stock),
                             quantity
                         };
-                        updatedPortfolio.stocks = [...player.portfolio.stocks, companyWithQuantity];
+                        updatedPortfolio.stocks = [...player.portfolio.stocks, stockWithQuantity];
                     }
                 }
 
@@ -292,15 +328,14 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
                     portfolio: updatedPortfolio
                 };
 
-                console.log(`✅ Куплено ${asset.name} x${quantity} за $${totalCost}`);
+                console.log(`Bought ${asset.name} x${quantity} for $${totalCost}`);
 
                 return {
                     ...prev,
                     players: [updatedPlayer, ...prev.players.slice(1)]
                 };
             } else {
-                // Не хватает денег
-                console.log(`❌ Недостаточно средств! Нужно $${totalCost}, есть $${player.balance}`);
+                console.log(`Недостаточно средств! Нужно $${totalCost}, есть $${player.balance}`);
                 return prev;
             }
         });
@@ -309,6 +344,28 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
     const sellAsset = (asset: AssetWithQuantity, quantity: number) => {
         setGameState(prev => {
             const player = prev.players[0];
+
+            // Получаем цену в зависимости от типа актива
+            let price = 0;
+            if (asset.type === 'stock') {
+                // Для акций нужно найти текущую цену в секторах
+                for (const sector of prev.sectors) {
+                    const found = sector.companies.find(c => c.id === asset.id);
+                    if (found) {
+                        price = found.currentPrice;
+                        break;
+                    }
+                }
+            } else if (asset.type === 'bond') {
+                const found = prev.availableBonds.find(b => b.id === asset.id);
+                if (found) price = found.price;
+            } else if (asset.type === 'realestate') {
+                const found = prev.availableRealEstate.find(r => r.id === asset.id);
+                if (found) price = found.price;
+            } else if (asset.type === 'metal') {
+                const found = prev.availableMetals.find(m => m.id === asset.id);
+                if (found) price = found.price;
+            }
 
             if (asset.type === 'bond') {
                 const assetIndex = player.portfolio.bonds.findIndex(a => a.id === asset.id);
@@ -326,7 +383,7 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
 
                     const updatedPlayer = {
                         ...player,
-                        balance: player.balance + (asset.price * quantity),
+                        balance: player.balance + (price * quantity),
                         portfolio: {
                             ...player.portfolio,
                             bonds: updatedBonds
@@ -354,7 +411,7 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
 
                     const updatedPlayer = {
                         ...player,
-                        balance: player.balance + (asset.price * quantity),
+                        balance: player.balance + (price * quantity),
                         portfolio: {
                             ...player.portfolio,
                             realEstate: updatedRealEstate
@@ -366,7 +423,7 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
                         players: [updatedPlayer, ...prev.players.slice(1)]
                     };
                 }
-            }  else if (asset.type === 'metal') {
+            } else if (asset.type === 'metal') {
                 const assetIndex = player.portfolio.metals.findIndex(a => a.id === asset.id);
                 if (assetIndex !== -1) {
                     const currentAsset = player.portfolio.metals[assetIndex];
@@ -382,7 +439,7 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
 
                     const updatedPlayer = {
                         ...player,
-                        balance: player.balance + (asset.price * quantity),
+                        balance: player.balance + (price * quantity),
                         portfolio: {
                             ...player.portfolio,
                             metals: updatedMetals
@@ -400,7 +457,7 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
                     const currentAsset = player.portfolio.stocks[assetIndex];
                     const newQuantity = currentAsset.quantity - quantity;
 
-                    let updatedStocks: CompanyWithQuantity[];
+                    let updatedStocks: StockWithQuantity[];
                     if (newQuantity <= 0) {
                         updatedStocks = player.portfolio.stocks.filter((_, i) => i !== assetIndex);
                     } else {
@@ -410,7 +467,7 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
 
                     const updatedPlayer = {
                         ...player,
-                        balance: player.balance + (asset.price * quantity),
+                        balance: player.balance + (price * quantity),
                         portfolio: {
                             ...player.portfolio,
                             stocks: updatedStocks
@@ -434,7 +491,7 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
             players: [
                 {
                     id: 'player1',
-                    name: playerName,  // Добавить name в тип Player
+                    name: playerName,
                     balance: startingBalance,
                     portfolio: {
                         stocks: [],
@@ -455,7 +512,6 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
             setGamePhase,
             setMarketType,
             setSelectedSector,
-            resetGame,
             nextYear,
             applyCrisisEffects,
             applyGrowthEffects,

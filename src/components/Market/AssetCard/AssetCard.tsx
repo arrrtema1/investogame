@@ -1,13 +1,13 @@
+// src/components/Market/AssetCard/AssetCard.tsx
 import React from 'react';
-import { Asset } from '../../../types/game.types';
+import { Asset, Stock, Bond, RealEstate, Metal } from '../../../types/game.types';
 import { Button } from '../../UI/Button';
-import { useLanguage } from '../../../contexts/LanguageContext';
 import './AssetCard.css';
 
 interface AssetCardProps {
-    asset: Asset;
+    asset: Asset & { currentPrice?: number };
     onBuy?: (asset: Asset) => void;
-    onSell?: (asset: Asset) => void;
+    onSell?: (asset: any) => void;
     quantity?: number;
     showActions?: boolean;
     playerBalance?: number;
@@ -19,32 +19,62 @@ export const AssetCard: React.FC<AssetCardProps> = ({
                                                         onSell,
                                                         quantity = 0,
                                                         showActions = true,
-                                                        playerBalance,
+                                                        playerBalance = 0
                                                     }) => {
-    const canAfford = playerBalance !== undefined && playerBalance >= asset.price;
-    const { t } = useLanguage();
+    // Получаем цену в зависимости от типа актива
+    const getPrice = (): number => {
+        // Для акций сначала проверяем currentPrice (переданный из Portfolio)
+        if (asset.type === 'stock') {
+            if (asset.currentPrice) return asset.currentPrice;
+            return (asset as Stock).currentPrice;
+        }
+        return (asset as Bond | RealEstate | Metal).price;
+    };
+
+    // Получаем доход в зависимости от типа актива
+    const getIncome = (): number => {
+        if (asset.type === 'stock') {
+            return (asset as Stock).currentIncome;
+        }
+        return (asset as Bond | RealEstate | Metal).income;
+    };
 
     const getAssetIcon = () => {
-        if (asset.type === 'bond') return '📊';
-        if (asset.type === 'realestate') return '🏠';
-        if (asset.type === 'metal') return '🪙';
-        return '📈';
+        switch(asset.type) {
+            case 'bond': return '📊';
+            case 'realestate': return '🏠';
+            case 'metal': return '🔨';
+            default: return '📈';
+        }
     };
 
     const getAssetTypeLabel = () => {
-        if (asset.type === 'bond') return 'Bond';
-        if (asset.type === 'realestate') return 'Real Estate';
-        if (asset.type === 'metal') return 'Metals';
-        return 'Stock';
+        switch(asset.type) {
+            case 'bond': return 'Bond';
+            case 'realestate': return 'Real Estate';
+            case 'metal': return 'Metal';
+            default: return 'Stock';
+        }
     };
 
     const getRiskLevel = () => {
-        if (asset.type === 'bond') return 'low';
-        if (asset.type === 'metal') return 'low';
-        if (asset.type === 'realestate') return 'medium';
-        return 'high';
+        switch(asset.type) {
+            case 'bond': return 'low';
+            case 'realestate': return 'medium';
+            case 'metal': return 'low';
+            default:
+                if ('size' in asset) {
+                    if (asset.size === 'large') return 'medium';
+                    if (asset.size === 'medium') return 'high';
+                    return 'very-high';
+                }
+                return 'medium';
+        }
     };
 
+    const price = getPrice();
+    const income = getIncome();
+    const canAfford = playerBalance >= price;
 
     return (
         <div className={`asset-card ${getRiskLevel()}`}>
@@ -59,12 +89,12 @@ export const AssetCard: React.FC<AssetCardProps> = ({
                 <div className="asset-details">
                     <div className="detail-item">
                         <span className="label">Price</span>
-                        <span className="value price">${asset.price}</span>
+                        <span className="value price">${price}</span>
                     </div>
                     <div className="detail-item">
                         <span className="label">Income</span>
-                        <span className={`value income ${asset.income > 0 ? 'positive' : 'negative'}`}>
-              {asset.income}%
+                        <span className={`value income ${income > 0 ? 'positive' : 'negative'}`}>
+              {income}%
             </span>
                     </div>
                     {quantity > 0 && (
@@ -78,17 +108,22 @@ export const AssetCard: React.FC<AssetCardProps> = ({
                 {showActions && (
                     <div className="asset-actions">
                         {onBuy && (
-                            <Button size="small"
-                                    variant="success"
-                                    onClick={() => onBuy(asset)}
-                                    disabled={!canAfford}
+                            <Button
+                                size="small"
+                                variant="success"
+                                onClick={() => onBuy(asset)}
+                                disabled={!canAfford}
                             >
-                                {t.buttons.buy}
+                                Buy ${price}
                             </Button>
                         )}
                         {onSell && quantity > 0 && (
-                            <Button size="small" variant="danger" onClick={() => onSell(asset)}>
-                                {t.buttons.sell}
+                            <Button
+                                size="small"
+                                variant="danger"
+                                onClick={() => onSell(asset)}
+                            >
+                                Sell
                             </Button>
                         )}
                     </div>

@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { Company } from '../../../types/game.types';
+import { Stock } from '../../../types/game.types';
 import './DiceRoll.css';
 
 interface DiceRollProps {
-    company: Company;
+    company: Stock;
     onRoll?: (value: number, isBankrupt: boolean) => void;
     disabled?: boolean;
 }

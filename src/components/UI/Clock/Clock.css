@@ -17,3 +17,10 @@
 .clock-icon {
     margin-right: 2px;
 }
+
+/* Responsive */
+@media (max-width: 480px) {
+    .clock, .clock-time, .clock-icon {
+        display: none;
+    }
+}

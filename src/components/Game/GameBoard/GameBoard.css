@@ -1,5 +1,3 @@
-/* src/components/Game/GameBoard/GameBoard.css */
-
 .game-board {
     max-width: 1600px;
     margin: 0 auto;
@@ -57,20 +55,17 @@
     padding: 0 10px;
     font-weight: 500;
 }
-
-.year {
-    color: #ffd700;
-    border-right: 2px solid rgba(255, 255, 255, 0.2);
-}
-
-.phase {
-    color: #4ade80;
-}
-
-.market-type {
-    color: #f472b6;
-    border-left: 2px solid rgba(255, 255, 255, 0.2);
-}
+    .year {
+        color: #ffd700;
+        border-right: 2px solid rgba(255, 255, 255, 0.2);
+    }
+    .phase {
+        color: #4ade80;
+    }
+    .market-type {
+        color: #f472b6;
+        border-left: 2px solid rgba(255, 255, 255, 0.2);
+    }
 
 /* Main Content Layout */
 .game-content {
@@ -97,12 +92,11 @@
     border-radius: 16px;
     text-align: center;
 }
-
-.player-info h3 {
-    margin: 0 0 15px 0;
-    font-size: 1.2rem;
-    opacity: 0.9;
-}
+    .player-info h3 {
+        margin: 0 0 15px 0;
+        font-size: 1.2rem;
+        opacity: 0.9;
+    }
 
 .balance-large {
     font-size: 2.5rem;
@@ -124,16 +118,14 @@
     border-radius: 16px;
     border: 2px solid #e2e8f0;
 }
-
-.game-controls h3 {
-    margin: 0 0 15px 0;
-    color: #1e293b;
-}
-
-.game-controls .button {
-    width: 100%;
-    margin-bottom: 10px;
-}
+    .game-controls h3 {
+        margin: 0 0 15px 0;
+        color: #1e293b;
+    }
+    .game-controls .button {
+        width: 100%;
+        margin-bottom: 10px;
+    }
 
 /* Main Panel */
 .main-panel {
@@ -161,17 +153,15 @@
     transition: all 0.3s;
     border-radius: 8px 8px 0 0;
 }
-
-.tab:hover {
-    color: #1e293b;
-    background: #f1f5f9;
-}
-
-.tab.active {
-    color: #3b82f6;
-    border-bottom: 3px solid #3b82f6;
-    background: #eff6ff;
-}
+    .tab:hover {
+        color: #1e293b;
+        background: #f1f5f9;
+    }
+    .tab.active {
+        color: #3b82f6;
+        border-bottom: 3px solid #3b82f6;
+        background: #eff6ff;
+    }
 
 /* Sectors Grid */
 .sectors-grid {
@@ -189,24 +179,20 @@
     border-left: 6px solid;
     transition: transform 0.3s, box-shadow 0.3s;
 }
-
-.sector-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-}
-
-.sector-card.affected {
-    background: #fef2f2;
-    border-color: #ef4444 !important;
-}
-
-.sector-card.crisis {
-    background: #fef2f2;
-}
-
-.sector-card.growth {
-    background: #f0fdf4;
-}
+    .sector-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    }
+    .sector-card.affected {
+        background: #fef2f2;
+        border-color: #ef4444 !important;
+    }
+    .sector-card.crisis {
+        background: #fef2f2;
+    }
+    .sector-card.growth {
+        background: #f0fdf4;
+    }
 
 .sector-header {
     display: flex;
@@ -214,12 +200,11 @@
     align-items: center;
     margin-bottom: 12px;
 }
-
-.sector-header h4 {
-    margin: 0;
-    font-size: 1.2rem;
-    color: #1e293b;
-}
+    .sector-header h4 {
+        margin: 0;
+        font-size: 1.2rem;
+        color: #1e293b;
+    }
 
 .badge {
     padding: 4px 8px;
@@ -255,12 +240,11 @@
     border-radius: 6px;
     font-size: 0.9rem;
 }
-
-.company-item.bankrupt {
-    background: #fee2e2;
-    opacity: 0.7;
-    text-decoration: line-through;
-}
+    .company-item.bankrupt {
+        background: #fee2e2;
+        opacity: 0.7;
+        text-decoration: line-through;
+    }
 
 .company-name {
     font-weight: 500;
@@ -281,14 +265,12 @@
 .income {
     font-weight: 600;
 }
-
-.income.positive {
-    color: #10b981;
-}
-
-.income.negative {
-    color: #ef4444;
-}
+    .income.positive {
+        color: #10b981;
+    }
+    .income.negative {
+        color: #ef4444;
+    }
 
 .bankrupt-label {
     font-size: 1rem;
@@ -309,18 +291,17 @@
     padding: 15px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     border: 1px solid #e2e8f0;
+    border-left: solid 5px gray;
     transition: transform 0.3s;
 }
-
-.asset-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-}
-
-.asset-card h4 {
-    margin: 0 0 10px 0;
-    color: #1e293b;
-}
+    .asset-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    }
+    .asset-card h4 {
+        margin: 0 0 10px 0;
+        color: #1e293b;
+    }
 
 .asset-details {
     display: flex;
@@ -366,25 +347,22 @@
     align-items: center;
     gap: 5px;
 }
-
-.summary-item span:first-child {
-    font-size: 0.9rem;
-    opacity: 0.9;
-}
-
-.summary-item span:last-child {
-    font-size: 1.5rem;
-    font-weight: 700;
-}
+    .summary-item span:first-child {
+        font-size: 0.9rem;
+        opacity: 0.9;
+    }
+    .summary-item span:last-child {
+        font-size: 1.5rem;
+        font-weight: 700;
+    }
 
 .portfolio-section {
     margin-bottom: 20px;
 }
-
-.portfolio-section h4 {
-    margin: 0 0 10px 0;
-    font-size: 1rem;
-}
+    .portfolio-section h4 {
+        margin: 0 0 10px 0;
+        font-size: 1rem;
+    }
 
 .portfolio-item {
     display: flex;
@@ -392,10 +370,14 @@
     padding: 8px 0;
     border-bottom: 1px solid #e2e8f0;
 }
-
-.portfolio-item:last-child {
-    border-bottom: none;
-}
+    .portfolio-item .item-sell {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+    }
+    .portfolio-item:last-child {
+        border-bottom: none;
+    }
 
 .empty-portfolio {
     text-align: center;
@@ -404,7 +386,7 @@
     font-style: italic;
 }
 
-/* Crisis Modal */
+
 .crisis-modal {
     position: fixed;
     top: 0;
@@ -427,17 +409,15 @@
     max-width: 400px;
     animation: slideIn 0.3s ease-out;
 }
-
-.crisis-content h2 {
-    margin: 0 0 20px 0;
-    color: #ef4444;
-    font-size: 1.8rem;
-}
-
-.crisis-content p {
-    margin: 0 0 30px 0;
-    color: #64748b;
-}
+    .crisis-content h2 {
+        margin: 0 0 20px 0;
+        color: #ef4444;
+        font-size: 1.8rem;
+    }
+    .crisis-content p {
+        margin: 0 0 30px 0;
+        color: #64748b;
+    }
 
 @keyframes slideIn {
     from {
@@ -464,6 +444,10 @@
     .sectors-grid {
         grid-template-columns: 1fr;
     }
+
+    .market-tabs {
+        justify-content: center;
+    }
 }
 
 @media (max-width: 768px) {
@@ -480,5 +464,11 @@
 
     .year, .phase, .market-type {
         border: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .tab span {
+        display: none;
     }
 }

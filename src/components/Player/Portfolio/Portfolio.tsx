@@ -1,20 +1,40 @@
-// src/components/Player/Portfolio/Portfolio.tsx
 import React, { useState } from 'react';
-import { Portfolio as PortfolioType } from '../../../types/game.types';
+import { Portfolio as PortfolioType, Sector } from '../../../types/game.types';
 import { AssetCard } from '../../Market/AssetCard';
 import './Portfolio.css';
 
 interface PortfolioProps {
     portfolio: PortfolioType;
     onSell?: (asset: any) => void;
+    sectors?: Sector[];
 }
 
-export const Portfolio: React.FC<PortfolioProps> = ({ portfolio, onSell }) => {
+export const Portfolio: React.FC<PortfolioProps> = ({ portfolio, onSell, sectors = [] }) => {
     const [activeTab, setActiveTab] = useState<'all' | 'stocks' | 'bonds' | 'realestate'>('all');
 
     const hasStocks = portfolio.stocks.length > 0;
     const hasBonds = portfolio.bonds.length > 0;
     const hasRealEstate = portfolio.realEstate.length > 0;
+
+    const getCurrentStockPrice = (stockId: number): number => {
+        for (const sector of sectors) {
+            const found = sector.companies.find(c => c.id === stockId);
+            if (found) {
+                return found.currentPrice;
+            }
+        }
+        return 0;
+    };
+
+    const prepareAssetForSell = (asset: any) => {
+        if (asset.type === 'stock') {
+            return {
+                ...asset,
+                currentPrice: getCurrentStockPrice(asset.id)  // добавляем текущую цену
+            };
+        }
+        return asset;
+    };
 
     const getFilteredAssets = () => {
         switch(activeTab) {
@@ -34,10 +54,16 @@ export const Portfolio: React.FC<PortfolioProps> = ({ portfolio, onSell }) => {
     };
 
     const getTotalValue = () => {
-        const stocks = portfolio.stocks.reduce((sum, s) => sum + (s.price * s.quantity), 0);
+        const stocks = portfolio.stocks.reduce((sum, s) => {
+            const currentPrice = getCurrentStockPrice(s.id);
+            return sum + (currentPrice * s.quantity);
+        }, 0);
+
         const bonds = portfolio.bonds.reduce((sum, b) => sum + (b.price * b.quantity), 0);
         const realEstate = portfolio.realEstate.reduce((sum, r) => sum + (r.price * r.quantity), 0);
-        return stocks + bonds + realEstate;
+        const metals = portfolio.metals?.reduce((sum, m) => sum + (m.price * m.quantity), 0) || 0;
+
+        return stocks + bonds + realEstate + metals;
     };
 
     if (!hasStocks && !hasBonds && !hasRealEstate) {
@@ -96,9 +122,13 @@ export const Portfolio: React.FC<PortfolioProps> = ({ portfolio, onSell }) => {
                 {getFilteredAssets().map(asset => (
                     <AssetCard
                         key={`${asset.id}-${asset.type}`}
-                        asset={asset}
+                        asset={asset.type === 'stock'
+                            ? { ...asset, currentPrice: getCurrentStockPrice(asset.id)
+                        }
+                            : asset
+                        }
                         quantity={asset.quantity}
-                        onSell={onSell ? () => onSell(asset) : undefined}
+                        onSell={onSell ? () => onSell(prepareAssetForSell(asset)) : undefined}
                     />
                 ))}
             </div>

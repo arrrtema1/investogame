@@ -12,7 +12,7 @@ interface PlayerPanelProps {
 
 export const PlayerPanel: React.FC<PlayerPanelProps> = ({ player, onReady }) => {
     const calculateNetWorth = () => {
-        const stocksValue = player.portfolio.stocks.reduce((sum, s) => sum + (s.price * s.quantity), 0);
+        const stocksValue = player.portfolio.stocks.reduce((sum, s) => sum + (s.currentPrice * s.quantity), 0);
         const bondsValue = player.portfolio.bonds.reduce((sum, b) => sum + (b.price * b.quantity), 0);
         const realEstateValue = player.portfolio.realEstate.reduce((sum, r) => sum + (r.price * r.quantity), 0);
 
@@ -20,7 +20,7 @@ export const PlayerPanel: React.FC<PlayerPanelProps> = ({ player, onReady }) => 
     };
 
     const calculateTotalIncome = () => {
-        const stocksIncome = player.portfolio.stocks.reduce((sum, s) => sum + (s.income * s.price * s.quantity / 100), 0);
+        const stocksIncome = player.portfolio.stocks.reduce((sum, s) => sum + (s.currentIncome * s.currentPrice * s.quantity / 100), 0);
         const bondsIncome = player.portfolio.bonds.reduce((sum, b) => sum + (b.income * b.price * b.quantity / 100), 0);
         const realEstateIncome = player.portfolio.realEstate.reduce((sum, r) => sum + (r.income * r.price * r.quantity / 100), 0);
 
