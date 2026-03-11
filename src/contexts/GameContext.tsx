@@ -85,18 +85,28 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
     const nextYear = () => {
         if (gameState.currentYear < 10) {
             setGameState(prev => {
-                // Сбрасываем к базовым ценам и доходам
+                // Восстанавливаем базовые цены, но сохраняем банкротство
                 const resetSectors = prev.sectors.map(sector => ({
                     ...sector,
                     isAffected: false,
                     marketType: undefined,
-                    companies: sector.companies.map(stock => ({
-                        ...stock,
-                        currentPrice: stock.basePrice,
-                        currentIncome: stock.baseIncome,
-                        isBankrupt: false,
-                        diceValue: undefined
-                    }))
+                    companies: sector.companies.map(stock => {
+                        // Если компания банкрот - оставляем как есть (цена 0, доход 0)
+                        if (stock.isBankrupt) {
+                            return {
+                                ...stock,
+                                diceValue: undefined
+                            };
+                        }
+
+                        // Для живых компаний - возвращаем базовые цены
+                        return {
+                            ...stock,
+                            currentPrice: stock.basePrice,
+                            currentIncome: stock.baseIncome,
+                            diceValue: undefined
+                        };
+                    })
                 }));
 
                 return {
@@ -124,8 +134,10 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
                         isAffected: true,
                         marketType: 'crisis' as const,
                         companies: s.companies.map(stock => {
-                            let priceMultiplier = 1.0;
+                            // Пропускаем банкротные компании
+                            if (stock.isBankrupt) return stock;
 
+                            let priceMultiplier = 1.0;
                             switch(stock.size) {
                                 case 'small': priceMultiplier = 0.85; break;
                                 case 'medium': priceMultiplier = 0.90; break;
@@ -199,25 +211,43 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
 
     const processBankruptcy = (stock: Stock, diceValue: number) => {
         setGameState(prev => {
-            // Удаляем компанию из сектора
+            // Определяем, банкрот или нет
+            const threshold = stock.size === 'large' ? 5 : stock.size === 'medium' ? 4 : 3;
+            const isBankrupt = diceValue >= threshold;
+
+            // Обновляем компанию в секторе
             const updatedSectors = prev.sectors.map(sector => {
                 if (sector.id === stock.sectorId) {
                     return {
                         ...sector,
-                        companies: sector.companies.filter(c => c.id !== stock.id)
+                        companies: sector.companies.map(c => {
+                            if (c.id === stock.id) {
+                                return {
+                                    ...c,
+                                    diceValue,
+                                    isBankrupt,
+                                    // Если банкрот - цена 0, доход 0
+                                    currentPrice: isBankrupt ? 0 : c.currentPrice,
+                                    currentIncome: isBankrupt ? 0 : c.currentIncome
+                                };
+                            }
+                            return c;
+                        })
                     };
                 }
                 return sector;
             });
 
-            // Удаляем из портфеля игрока
-            const updatedPlayers = prev.players.map(player => ({
-                ...player,
-                portfolio: {
-                    ...player.portfolio,
-                    stocks: player.portfolio.stocks.filter(s => s.id !== stock.id)
-                }
-            }));
+            // Если компания банкрот - удаляем из портфеля игрока
+            const updatedPlayers = isBankrupt
+                ? prev.players.map(player => ({
+                    ...player,
+                    portfolio: {
+                        ...player.portfolio,
+                        stocks: player.portfolio.stocks.filter(s => s.id !== stock.id)
+                    }
+                }))
+                : prev.players;
 
             return {
                 ...prev,

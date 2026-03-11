@@ -44,7 +44,6 @@
 
 .game-info {
     display: flex;
-    gap: 15px;
     background: rgba(255, 255, 255, 0.1);
     padding: 12px 20px;
     border-radius: 40px;
@@ -56,15 +55,19 @@
     font-weight: 500;
 }
     .year {
-        color: #ffd700;
+        color: orange;
         border-right: 2px solid rgba(255, 255, 255, 0.2);
     }
     .phase {
-        color: #4ade80;
+        color: lawngreen;
+        border-right: 2px solid rgba(255, 255, 255, 0.2);
     }
-    .market-type {
-        color: #f472b6;
-        border-left: 2px solid rgba(255, 255, 255, 0.2);
+    .market-type.crisis {
+        color: red;
+    }
+
+    .market-type.growth {
+        color: lawngreen;
     }
 
 /* Main Content Layout */
@@ -185,7 +188,7 @@
     }
     .sector-card.affected {
         background: #fef2f2;
-        border-color: #ef4444 !important;
+        border-color: red !important;
     }
     .sector-card.crisis {
         background: #fef2f2;
@@ -215,12 +218,12 @@
 }
 
 .crisis-badge {
-    background: #ef4444;
+    background: red;
     color: white;
 }
 
 .growth-badge {
-    background: #10b981;
+    background: green;
     color: white;
 }
 
@@ -266,10 +269,10 @@
     font-weight: 600;
 }
     .income.positive {
-        color: #10b981;
+        color: lawngreen;
     }
     .income.negative {
-        color: #ef4444;
+        color: red;
     }
 
 .bankrupt-label {
@@ -316,7 +319,7 @@
 }
 
 .asset-income {
-    background: #10b981;
+    background: lawngreen;
     color: white;
     padding: 4px 8px;
     border-radius: 4px;
@@ -411,7 +414,7 @@
 }
     .crisis-content h2 {
         margin: 0 0 20px 0;
-        color: #ef4444;
+        color: red;
         font-size: 1.8rem;
     }
     .crisis-content p {
@@ -429,6 +432,36 @@
         opacity: 1;
     }
 }
+
+.info-message {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    backdrop-filter: blur(5px);
+}
+
+.info-content {
+    background: white;
+    padding: 30px;
+    border-radius: 20px;
+    text-align: center;
+    max-width: 400px;
+    animation: slideIn 0.3s ease-out;
+}
+
+.info-content p {
+    margin: 0 0 20px 0;
+    font-size: 1.2rem;
+    color: #1e293b;
+}
+
 
 /* Responsive */
 @media (max-width: 1024px) {

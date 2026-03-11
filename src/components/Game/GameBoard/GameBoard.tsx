@@ -22,6 +22,7 @@ export const GameBoard: React.FC = () => {
     const [showDice, setShowDice] = useState(false);
     const [currentCompanyIndex, setCurrentCompanyIndex] = useState(0);
     const [crisisCompanies, setCrisisCompanies] = useState<any[]>([]);
+    const [infoMessage, setInfoMessage] = useState<string | null>(null);
 
     const getCurrentStockPrice = (stockId: number): number => {
         for (const sector of gameState.sectors) {
@@ -45,11 +46,7 @@ export const GameBoard: React.FC = () => {
         setShowCoinFlip(false);
         setMarketType(result);
 
-        if (result === 'crisis') {
-            setShowRoulette(true);  // Рулетка выберет сектор для кризиса
-        } else {
-            setShowRoulette(true);  // Рулетка выберет сектор для роста
-        }
+        setShowRoulette(true);
     };
 
     // Конец рулетки
@@ -58,12 +55,26 @@ export const GameBoard: React.FC = () => {
 
         console.log('Market type:', gameState.marketType);
         console.log('Selected sector:', sector);
+
         if (gameState.marketType === 'crisis') {
-            // Если кризис - применяем кризис к сектору
+            // Применяем кризис к сектору
             applyCrisisEffects(sector);
-            setCrisisCompanies(sector.companies);
-            setCurrentCompanyIndex(0);
-            setShowDice(true);
+
+            // Проверяем, есть ли живые компании в секторе
+            const liveCompanies = sector.companies.filter((c: any) => !c.isBankrupt);
+
+            if (liveCompanies.length > 0) {
+                // Есть живые компании - бросаем кубики
+                setCrisisCompanies(liveCompanies);
+                setCurrentCompanyIndex(0);
+                setShowDice(true);
+            } else {
+                // Все компании банкроты
+                console.log('All companies in this sector are bankrupt');
+                setInfoMessage('All companies in this sector are already bankrupt!');
+                setTimeout(() => setInfoMessage(null), 3000); // Убираем через 3 секунды
+                setGamePhase('trading');
+            }
         } else {
             // Если рост - просто применяем рост
             applyGrowthEffects(sector);
@@ -106,9 +117,16 @@ export const GameBoard: React.FC = () => {
 
     const getMarketTypeDisplay = () => {
         if (!gameState.marketType) return null;
-        return gameState.marketType === 'crisis'
+
+        const text = gameState.marketType === 'crisis'
             ? '🔴 Crisis in one sector'
             : '🟢 Grow in one sector';
+
+        return (
+            <span className={`market-type ${gameState.marketType}`}>
+            {text}
+        </span>
+        );
     };
 
     const renderSectorCard = (sector: Sector) => {
@@ -507,6 +525,16 @@ export const GameBoard: React.FC = () => {
                     company={crisisCompanies[currentCompanyIndex]}
                     onComplete={handleDiceComplete}
                 />
+            )}
+
+            {/* Поле с уведомлением */}
+            {infoMessage && (
+                <div className="info-message">
+                    <div className="info-content">
+                        <p>{infoMessage}</p>
+                        <Button size="small" onClick={() => setInfoMessage(null)}>OK</Button>
+                    </div>
+                </div>
             )}
         </div>
     );

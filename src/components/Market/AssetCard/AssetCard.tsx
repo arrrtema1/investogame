@@ -43,7 +43,7 @@ export const AssetCard: React.FC<AssetCardProps> = ({
         switch(asset.type) {
             case 'bond': return '📊';
             case 'realestate': return '🏠';
-            case 'metal': return '🔨';
+            case 'metal': return '🪙';
             default: return '📈';
         }
     };
@@ -78,7 +78,7 @@ export const AssetCard: React.FC<AssetCardProps> = ({
 
     return (
         <div className={`asset-card ${getRiskLevel()}`}>
-            <div className="asset-icon">{getAssetIcon()}</div>
+            <div className="asset-icon">{getAssetIcon()}&nbsp;</div>
 
             <div className="asset-info">
                 <div className="asset-header">
@@ -114,7 +114,7 @@ export const AssetCard: React.FC<AssetCardProps> = ({
                                 onClick={() => onBuy(asset)}
                                 disabled={!canAfford}
                             >
-                                Buy ${price}
+                                Buy
                             </Button>
                         )}
                         {onSell && quantity > 0 && (
